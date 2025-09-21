@@ -39,12 +39,9 @@ export function useInputRadio(props, emit) {
 
   // Regular behavior: 0.6 second delay before selection registers
   const handleRegularBehavior = (value) => {
-    isProcessingSelection.value = true
-
     timeoutId.value = setTimeout(() => {
       selectedValue.value = value
       emit('update:modelValue', value)
-      isProcessingSelection.value = false
     }, 600)
   }
 
@@ -62,7 +59,7 @@ export function useInputRadio(props, emit) {
         selectedValue.value = randomOption.value
         emit('update:modelValue', randomOption.value)
       }
-    }, 2000)
+    }, 600)
   }
 
   // Toxic behavior: Selection works normally, but question text changes

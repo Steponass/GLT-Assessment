@@ -68,11 +68,14 @@ const inputName = computed(() => props.name)
 
 .radio-group {
   display: flex;
-  gap: var(--space-12-16px);
+  justify-content: space-between;
+  width: 400px;
 }
 
 .radio-option {
+  flex: 1;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 

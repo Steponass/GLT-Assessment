@@ -6,22 +6,24 @@
       </p>
 
     <form class="questions-container" @submit.prevent="handleSubmit">
+      <div class="scale-labels">
+        <div>
+          <span class="scale-label">Strongly Disagree</span>
+          <span class="scale-label">Disagree</span>
+          <span class="scale-label">Neutral</span>
+          <span class="scale-label">Agree</span>
+          <span class="scale-label">Strongly Agree</span>
+        </div>
+      </div>
+
       <div
         v-for="(question, index) in questionsToDisplay"
         :key="question.id"
         class="question-block"
       >
         <div class="question-header">
-          <h2 class="question-number">Question {{ index + 1 }}</h2>
+          <h2 class="question-number">{{ index + 1 }}</h2>
           <p class="question-text">{{ question.text }}</p>
-        </div>
-
-        <div class="scale-labels">
-          <span class="scale-label">Strongly Disagree</span>
-          <span class="scale-label">Disagree</span>
-          <span class="scale-label">Neutral</span>
-          <span class="scale-label">Agree</span>
-          <span class="scale-label">Strongly Agree</span>
         </div>
 
         <!-- Vue: v-model creates two-way binding automatically -->
@@ -85,13 +87,11 @@ const baseQuestions = [
   {
     id: 'q1',
     text: 'My life is not turning out the way I expected it to.',
-    alteredText: 'My life is a complete disappointment and failure.',
-    behaviorKind: 'regular' // You can change these as needed
+    behaviorKind: 'regular'
   },
   {
     id: 'q2',
     text: 'People talk about me behind my back.',
-    alteredText: 'Everyone gossips about how pathetic I am.',
     behaviorKind: 'shifty'
   },
   {
@@ -103,14 +103,13 @@ const baseQuestions = [
   {
     id: 'q4',
     text: 'I am uncertain of my worth.',
-    alteredText: 'I am completely worthless and everyone knows it.',
     behaviorKind: 'regular'
   },
   {
     id: 'q5',
     text: 'I am easily manipulated by others.',
     alteredText: 'I am so weak that anyone can control me.',
-    behaviorKind: 'toxic' // Another toxic question for demonstration
+    behaviorKind: 'toxic'
   }
 ]
 
@@ -159,50 +158,58 @@ watch(answers, (newAnswers) => {
 
 <style scoped>
 .personality-assessment {
-  width: min (1024px, 95%);
+  width: min(1024px, 95%);
   margin: 0 auto;
-  padding: 2rem;
+  padding-block: var(--space-12-16px);
 }
 
 .assessment-title {
-  margin-bottom: 1rem;
-}
-
-.assessment-description {
+  justify-self: center;
+  margin-bottom: var(--space-16-24px);
+  font-size: var(--fontsize-h2);
 }
 
 .questions-container {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: var(--space-16px);
 }
-
-.question-block {
-}
-
-.question-header {
-  margin-bottom: 1.5rem;
-}
-
-.question-number {
-}
-
-.question-text {
-}
-
 .scale-labels {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 1fr 400px;
   gap: 1rem;
   margin-bottom: 1rem;
-  text-align: center;
+
+}
+
+.scale-labels::before {
+  content: "";
+}
+
+.scale-labels > div {
+  display: flex;
+  justify-content: space-between;
+  width: 400px;
 }
 
 .scale-label {
+  flex: 1;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--clr-text-secondary, #666);
 }
 
-.question-input {
-  margin-top: 1rem;
+.question-block {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 1rem;
+  align-items: center;
+}
+
+.question-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12px);
 }
 
 .submit-button {
