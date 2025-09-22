@@ -14,6 +14,11 @@ export function useInputRadio(props, emit) {
   }, { immediate: true })
 
   const handleRadioSelection = (event) => {
+
+      if (props.behaviorKind === 'regular') {
+    event.preventDefault()
+  }
+
     const newValue = event.target.value
 
     // Clear any existing timeout
@@ -66,10 +71,15 @@ export function useInputRadio(props, emit) {
   const handleToxicBehavior = (value) => {
     selectedValue.value = value
     emit('update:modelValue', value)
-
-    // Mark that user has made a selection (this triggers question text change)
-    hasSelectedOnce.value = true
   }
+
+const clearToxicSelection = () => {
+  if (props.behaviorKind === 'toxic') {
+    selectedValue.value = ''
+    emit('update:modelValue', '')
+    hasSelectedOnce.value = true // NOW trigger question text change
+  }
+}
 
   // Vue Concept: computed properties for derived state
   // This computed property will automatically re-run whenever hasSelectedOnce changes
@@ -91,6 +101,7 @@ export function useInputRadio(props, emit) {
     handleRadioSelection,
     getDisplayText,
     shouldShowAlteredQuestion,
-    isProcessingSelection
+    isProcessingSelection,
+    clearToxicSelection
   }
 }

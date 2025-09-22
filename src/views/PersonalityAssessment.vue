@@ -2,7 +2,7 @@
   <div class="personality-assessment">
       <h1 class="assessment-title">Personality Assessment</h1>
       <p class="assessment-description">
-        Please respond to each statement based on how much you agree or disagree.
+        Respond to each statement based on how much you agree or disagree.
       </p>
 
     <form class="questions-container" @submit.prevent="handleSubmit">
@@ -23,12 +23,13 @@
       >
         <div class="question-header">
           <h2 class="question-number">{{ index + 1 }}</h2>
-          <p class="question-text">{{ question.text }}</p>
+          <p class="question-text">{{ getQuestionText(question) }}</p>
         </div>
 
         <!-- Vue: v-model creates two-way binding automatically -->
         <!-- This is much simpler than React's value + onChange pattern -->
         <InputRadio
+        :ref="el => radioRefs[question.id] = el"
           v-model="answers[question.id]"
           :options="likertScaleOptions"
           :behavior-kind="question.behaviorKind"
@@ -50,12 +51,14 @@
 </template>
 
 <script setup>
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive, watch, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import InputRadio from '@/components/assessment/inputRadio/InputRadio.vue'
 
 // Initialize router for navigation
 const router = useRouter()
+
+const radioRefs = ref({})
 
 // Vue Concept: reactive() vs ref() for complex objects
 // reactive() is better for objects with multiple properties that change together
@@ -109,38 +112,81 @@ const baseQuestions = [
     id: 'q5',
     text: 'I am easily manipulated by others.',
     alteredText: 'I am so weak that anyone can control me.',
-    behaviorKind: 'toxic'
+    behaviorKind: 'shifty'
   }
 ]
 
-// Vue: Computed property that depends on multiple reactive sources
-const questionsToDisplay = computed(() => {
-  return baseQuestions.map(question => {
-    // For toxic questions, show altered text after the user has answered
-    if (question.behaviorKind === 'toxic' && answers[question.id] !== '') {
-      return {
-        ...question,
-        text: question.alteredText
-      }
-    }
-    return question
-  })
+const toxicQuestionFirstSubmission = reactive({
+  q3: false, // Track if q3 (toxic) has been submitted once
 })
 
-// Likert scale options (1-5 scale as specified)
+const getQuestionText = (question) => {
+  if (question.behaviorKind === 'toxic' && questionStates[question.id].hasBeenAnswered) {
+    return question.alteredText || question.text
+  }
+  return question.text
+}
+
+// Vue: Computed property that depends on multiple reactive sources
+const questionsToDisplay = computed(() => baseQuestions)
+
+// Likert scale options (1-5)
 const likertScaleOptions = [
-  { value: '1', text: '1' },
-  { value: '2', text: '2' },
-  { value: '3', text: '3' },
-  { value: '4', text: '4' },
-  { value: '5', text: '5' }
+  { value: '1' },
+  { value: '2' },
+  { value: '3' },
+  { value: '4' },
+  { value: '5' }
 ]
 
 // Form submission handler
 // Vue Concept: Event handlers in Vue don't need useCallback optimization
+
 const handleSubmit = () => {
-  // Redirect to numeracy assessment - this is a fake form so no data processing needed
+  // Check if any toxic questions haven't had their first submission yet
+  const hasPendingToxicFirstSubmission = baseQuestions.some(question => {
+    if (question.behaviorKind === 'toxic') {
+      return answers[question.id] !== '' && !toxicQuestionFirstSubmission[question.id]
+    }
+    return false
+  })
+
+  // If there are toxic questions that need their first submission trigger
+  if (hasPendingToxicFirstSubmission) {
+    clearToxicInputsAndChangeText()
+    return
+  }
+
+  // Normal validation check for remaining questions
+  if (!allQuestionsAnswered.value) {
+    // This would only trigger if non-toxic questions are incomplete
+    console.log('Please complete all questions')
+    return
+  }
+
+  // All questions properly answered (including toxic after their reset)
   router.push('/assessment/numeracy')
+}
+
+const clearToxicInputsAndChangeText = () => {
+  baseQuestions.forEach(question => {
+    if (question.behaviorKind === 'toxic' && answers[question.id] !== '') {
+      // Mark this toxic question as having had its first submission
+      toxicQuestionFirstSubmission[question.id] = true
+
+      // Clear the answer
+      answers[question.id] = ''
+
+      // Trigger question text change
+      questionStates[question.id].hasBeenAnswered = true
+
+      // Clear the radio component's internal state
+      const radioComponent = radioRefs.value[question.id]
+      if (radioComponent && radioComponent.clearToxicSelection) {
+        radioComponent.clearToxicSelection()
+      }
+    }
+  })
 }
 
 // Vue Concept: Watchers for side effects
@@ -149,11 +195,17 @@ const handleSubmit = () => {
 // Watch for changes in answers to track which questions have been answered
 watch(answers, (newAnswers) => {
   Object.keys(newAnswers).forEach(questionId => {
-    if (newAnswers[questionId] !== '' && !questionStates[questionId].hasBeenAnswered) {
+    const question = baseQuestions.find(q => q.id === questionId)
+
+    // Only update hasBeenAnswered for non-toxic questions during normal interaction
+    if (newAnswers[questionId] !== '' &&
+        !questionStates[questionId].hasBeenAnswered &&
+        question?.behaviorKind !== 'toxic') {
       questionStates[questionId].hasBeenAnswered = true
     }
   })
-}, { deep: true }) // deep: true watches nested properties in objects
+}, { deep: true })
+ // deep: true watches nested properties in objects
 </script>
 
 <style scoped>
@@ -177,8 +229,8 @@ watch(answers, (newAnswers) => {
 .scale-labels {
   display: grid;
   grid-template-columns: 1fr 400px;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: var(--space-12-16px);
+  margin-bottom: var(--space-12-16px);
 
 }
 
@@ -189,14 +241,11 @@ watch(answers, (newAnswers) => {
 .scale-labels > div {
   display: flex;
   justify-content: space-between;
-  width: 400px;
 }
 
 .scale-label {
   flex: 1;
   text-align: center;
-  font-size: 0.875rem;
-  color: var(--clr-text-secondary, #666);
 }
 
 .question-block {
@@ -210,6 +259,10 @@ watch(answers, (newAnswers) => {
   display: flex;
   align-items: center;
   gap: var(--space-12px);
+}
+
+.question-number {
+  font-size: var(--fontsize-h4);
 }
 
 .submit-button {

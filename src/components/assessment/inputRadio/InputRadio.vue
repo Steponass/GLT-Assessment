@@ -11,12 +11,9 @@
           :name="inputName"
           :value="option.value"
           :checked="selectedValue === option.value"
-          @change="handleRadioSelection"
+          @click="handleRadioSelection"
           class="radio-input"
         />
-        <span class="radio-text">
-          {{ getDisplayText(option.text) }}
-        </span>
       </label>
     </div>
   </div>
@@ -53,13 +50,18 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'clear-toxic'])
 
 const {
   selectedValue,
   handleRadioSelection,
-  getDisplayText
+  getDisplayText,
+  clearToxicSelection
 } = useInputRadio(props, emit)
+
+defineExpose({
+  clearToxicSelection
+})
 
 const inputName = computed(() => props.name)
 </script>
