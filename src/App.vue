@@ -2,7 +2,7 @@
 import { onMounted } from 'vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
-import { useAssessmentStore } from '@/stores/assessmentStore'
+// import { useAssessmentStore } from '@/stores/assessmentStore'
 
 export default {
   name: 'App',
@@ -13,7 +13,7 @@ export default {
   },
 
   setup() {
-    const assessmentStore = useAssessmentStore()
+    // const assessmentStore = useAssessmentStore()
 
     onMounted(() => {
       // assessmentStore.loadPersistedState()

@@ -14,6 +14,9 @@
           @click="handleRadioSelection"
           class="radio-input"
         />
+        <span class="radio-text">
+          {{ getDisplayText(option.text) }}
+        </span>
       </label>
     </div>
   </div>
