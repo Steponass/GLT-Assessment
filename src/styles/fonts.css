@@ -47,8 +47,8 @@
   font-weight: 400;
 }
 
-:where(h6, h5, h4, h3, h2, h1) {
-  line-height: 1.2;
+:where(h6, h5, h4, h3, h2, h1, button, input, label) {
+  line-height: 1.1;
 }
 
 :where(p) {
