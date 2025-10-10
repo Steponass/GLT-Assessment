@@ -2,16 +2,28 @@ import { ref, watch } from 'vue'
 
 export function useInputNumber(props, emit) {
   // Vue Concept: Number input requires careful type handling
-  // Store both internal value and display value for shifty behavior
+  // Store both internal value and display value for different behaviors
   const internalValue = ref(props.modelValue)
   const displayValue = ref(props.modelValue?.toString() || '')
   const timeoutId = ref(null)
 
+  // Vue Concept: Pirate behavior state management
+  const isPirateMode = ref(false)
+  const pirateTimeoutId = ref(null)
+  const showPirateMessage = ref(false)
+
   // Vue Concept: Sync with parent component's v-model
   // Parse string input to number for parent component
   watch(() => props.modelValue, (newValue) => {
-    internalValue.value = newValue
-    displayValue.value = newValue?.toString() || ''
+    if (newValue === null || newValue === undefined) {
+      internalValue.value = newValue
+      displayValue.value = newValue?.toString() || ''
+      isPirateMode.value = false
+      showPirateMessage.value = false
+    } else {
+      internalValue.value = newValue
+      displayValue.value = newValue?.toString() || ''
+    }
   }, { immediate: true })
 
   const handleNumberInput = (event) => {
@@ -22,10 +34,14 @@ export function useInputNumber(props, emit) {
     const inputValue = event.target.value
     const numericValue = inputValue === '' ? null : parseFloat(inputValue)
 
-    // Clear existing timeout
+    // Clear existing timeouts
     if (timeoutId.value) {
       clearTimeout(timeoutId.value)
       timeoutId.value = null
+    }
+    if (pirateTimeoutId.value) {
+      clearTimeout(pirateTimeoutId.value)
+      pirateTimeoutId.value = null
     }
 
     switch (props.behaviorKind) {
@@ -34,6 +50,9 @@ export function useInputNumber(props, emit) {
         break
       case 'shifty':
         handleShiftyBehavior(numericValue, inputValue)
+        break
+      case 'pirate':
+        handlePirateBehavior(numericValue, inputValue)
         break
       default:
         handleRegularBehavior(numericValue, inputValue)
@@ -79,6 +98,40 @@ export function useInputNumber(props, emit) {
     }, 200)
   }
 
+  // Vue Concept: Pirate behavior - replaces input with "AARRRGH"
+  const handlePirateBehavior = (numericValue, inputValue) => {
+    // If already in pirate mode, ignore further input
+    if (isPirateMode.value) {
+      return
+    }
+
+    // Update display immediately for responsive UI
+    displayValue.value = inputValue
+
+    // If user is typing numbers, activate pirate mode
+    if (inputValue && /\d/.test(inputValue)) {
+      showPirateMessage.value = true
+
+      // Give user a moment to see their input, then pirate takeover
+      pirateTimeoutId.value = setTimeout(() => {
+        activatePirateMode()
+      }, 1200) // 1.2 seconds to let user see what they typed
+    } else {
+      // Handle non-numeric input normally
+      internalValue.value = numericValue
+      emit('update:modelValue', numericValue)
+    }
+  }
+
+  // Vue Concept: Pirate mode activation
+  const activatePirateMode = () => {
+    isPirateMode.value = true
+    displayValue.value = 'AARRRGH'
+    internalValue.value = 'AARRRGH'
+    showPirateMessage.value = true
+    emit('update:modelValue', 'AARRRGH')
+  }
+
   // Vue Concept: Computed-like getter for template binding
   // Returns current display value for input field
   const getCurrentDisplayValue = () => {
@@ -90,10 +143,21 @@ export function useInputNumber(props, emit) {
     return internalValue.value !== null && !isNaN(internalValue.value)
   }
 
+  // Vue Concept: Getter for pirate state (for styling and messages)
+  const getIsPirateMode = () => {
+    return isPirateMode.value
+  }
+
+  const getShowPirateMessage = () => {
+    return showPirateMessage.value
+  }
+
   // Vue Concept: Return reactive values and functions for component use
   return {
     handleNumberInput,
     getCurrentDisplayValue,
-    isValidNumber
+    isValidNumber,
+    getIsPirateMode,
+    getShowPirateMessage
   }
 }

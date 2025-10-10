@@ -27,11 +27,6 @@ const routes = [
     component: () => import('@/views/LogicAssessment.vue')
   },
   {
-    path: '/assessment/literacy',
-    name: 'literacy-assessment',
-    component: () => import('@/views/LiteracyAssessment.vue')
-  },
-  {
     path: '/assessment/data-analysis',
     name: 'data-analysis-assessment',
     component: () => import('@/views/DataAnalysisAssessment.vue')

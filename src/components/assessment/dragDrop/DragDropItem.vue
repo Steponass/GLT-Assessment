@@ -15,7 +15,7 @@
     @focus="handleFocus"
     @blur="handleBlur"
   >
-    {{ item }}
+    <p>{{ item }}</p>
   </div>
 </template>
 

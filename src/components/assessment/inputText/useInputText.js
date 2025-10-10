@@ -9,13 +9,8 @@ export function useInputText(props, emit) {
 
   // Shifty behavior state
   const keystrokeCount = ref(0)
-  const shouldLoseNextCharacter = ref(false)
 
-  // Toxic behavior state
-  const currentWordStartIndex = ref(0)
-  const isReplacingWord = ref(false)
-
-  // Vue Concept: watch() to sync with parent v-model
+  // Vue: watch() to sync with parent v-model
   // This ensures our internal state stays aligned with external changes
   watch(() => props.modelValue, (newValue) => {
     if (newValue !== actualValue.value) {

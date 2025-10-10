@@ -9,7 +9,7 @@
         @dragleave="handleDragLeavePool"
         @drop="handleDropToPool"
       >
-        <h3 class="pool-title">Available Items</h3>
+        <h4 class="pool-title">Available Items</h4>
         <div class="items-list">
           <DragDropItem
             v-for="item in availableItems"
@@ -37,7 +37,7 @@
           @dragleave="() => handleDragLeaveCategory(category)"
           @drop="(event) => handleDropToCategory(event, category)"
         >
-          <h3 class="category-title">{{ category }}</h3>
+          <h4 class="category-title">{{ category }}</h4>
           <div class="category-items">
             <DragDropItem
               v-for="item in modelValue[category]"

@@ -1,7 +1,7 @@
 import { ref, reactive } from 'vue'
 
 export function useDragDrop(props, emit) {
-  // Vue Concept: Reactive state management
+  // Track which item is currently being dragged (for visuals/ARIA)
   const draggingItem = ref(null)
   const dragOverCategory = ref(null)
   const isDragOverPool = ref(false)
@@ -10,6 +10,7 @@ export function useDragDrop(props, emit) {
 
   // Shifty behavior tracking
   const categoryPlacementCounts = reactive({})
+  const totalDropCount = ref(0)
   const shiftyTimeoutId = ref(null)
 
   // Initialize placement counts for each category
@@ -17,7 +18,7 @@ export function useDragDrop(props, emit) {
     categoryPlacementCounts[category] = 0
   })
 
-  // Vue Concept: Drag event handlers
+  // Drag event handlers
   const handleDragStart = (draggedItem) => {
     draggingItem.value = draggedItem
     announceToScreenReader(`Picked up ${draggedItem}`)
@@ -36,9 +37,7 @@ export function useDragDrop(props, emit) {
   }
 
   const handleDragOverCategory = (category) => {
-    if (draggingItem.value) {
-      dragOverCategory.value = category
-    }
+    dragOverCategory.value = category
   }
 
   const handleDragLeaveCategory = (category) => {
@@ -48,9 +47,7 @@ export function useDragDrop(props, emit) {
   }
 
   const handleDragOverPool = () => {
-    if (draggingItem.value) {
-      isDragOverPool.value = true
-    }
+    isDragOverPool.value = true
   }
 
   const handleDragLeavePool = () => {
@@ -61,20 +58,20 @@ export function useDragDrop(props, emit) {
     dropEvent.preventDefault()
 
     const droppedItem = dropEvent.dataTransfer.getData('text/plain')
-    if (!droppedItem || !draggingItem.value) return
+    if (!droppedItem) return
 
-    // Create new model value with item added to category
-    const newModelValue = { ...props.modelValue }
+    // Create completely new model with deep array copies
+    const newModelValue = {}
 
-    // Remove item from all categories first
-    Object.keys(newModelValue).forEach(cat => {
-      newModelValue[cat] = newModelValue[cat].filter(existingItem => existingItem !== droppedItem)
+    // Initialize all categories with filtered arrays (removes item from all categories)
+    props.categories.forEach(cat => {
+      newModelValue[cat] = [...props.modelValue[cat].filter(item => item !== droppedItem)]
     })
 
     // Add item to target category
     newModelValue[category] = [...newModelValue[category], droppedItem]
 
-    // Emit update
+    // Emit the complete new model
     emit('update:modelValue', newModelValue)
 
     // Handle shifty behavior
@@ -82,8 +79,9 @@ export function useDragDrop(props, emit) {
       handleShiftyBehavior(category, droppedItem, newModelValue)
     }
 
-    // Reset drag state
+    // Reset visual state
     dragOverCategory.value = null
+    draggingItem.value = null
     announceToScreenReader(`Dropped ${droppedItem} into ${category}`)
   }
 
@@ -91,61 +89,67 @@ export function useDragDrop(props, emit) {
     poolDropEvent.preventDefault()
 
     const returnedItem = poolDropEvent.dataTransfer.getData('text/plain')
-    if (!returnedItem || !draggingItem.value) return
+    if (!returnedItem) return
 
-    // Create new model value with item removed from all categories
-    const newModelValue = { ...props.modelValue }
+    // Create new model with item removed from all categories
+    const newModelValue = {}
 
-    Object.keys(newModelValue).forEach(cat => {
-      newModelValue[cat] = newModelValue[cat].filter(existingItem => existingItem !== returnedItem)
+    props.categories.forEach(cat => {
+      newModelValue[cat] = [...props.modelValue[cat].filter(item => item !== returnedItem)]
     })
 
     emit('update:modelValue', newModelValue)
 
     isDragOverPool.value = false
+    draggingItem.value = null
     announceToScreenReader(`Returned ${returnedItem} to available items`)
   }
 
-  // Vue Concept: Shifty behavior implementation
+  // Shifty behavior implementation
   const handleShiftyBehavior = (targetCategory, movedItem, currentModelValue) => {
-    // Increment placement count for this category
-    categoryPlacementCounts[targetCategory]++
+    // Increment global drop count
+    totalDropCount.value++
 
-    // Check if this is the 3rd item placed in this category
-    if (categoryPlacementCounts[targetCategory] % 3 === 0) {
-      // Reset counter for this category
-      categoryPlacementCounts[targetCategory] = 0
+    // On every 3rd drop globally, relocate the item to a different random category
+    if (totalDropCount.value % 3 !== 0) return
 
-      // Find a different random category
-      const otherCategories = props.categories.filter(cat => cat !== targetCategory)
-      if (otherCategories.length === 0) return
+    // Find a different random category
+    const otherCategories = props.categories.filter(cat => cat !== targetCategory)
+    if (otherCategories.length === 0) return
 
-      const randomCategory = otherCategories[Math.floor(Math.random() * otherCategories.length)]
+    const randomCategory = otherCategories[Math.floor(Math.random() * otherCategories.length)]
 
-      // Highlight the category that will receive the item
-      shiftyHighlightCategory.value = randomCategory
+    // Highlight the category that will receive the item
+    shiftyHighlightCategory.value = randomCategory
 
-      // Move item after 200ms
-      shiftyTimeoutId.value = setTimeout(() => {
-        const shiftyModelValue = { ...currentModelValue }
+    // Move item after 200ms
+    shiftyTimeoutId.value = setTimeout(() => {
+      const shiftyModelValue = {}
 
-        // Remove item from target category
-        shiftyModelValue[targetCategory] = shiftyModelValue[targetCategory].filter(existingItem => existingItem !== movedItem)
+      // Create new model with deep copies
+      props.categories.forEach(cat => {
+        if (cat === targetCategory) {
+          // Remove item from target category
+          shiftyModelValue[cat] = [...currentModelValue[cat].filter(item => item !== movedItem)]
+        } else if (cat === randomCategory) {
+          // Add item to random category
+          shiftyModelValue[cat] = [...currentModelValue[cat], movedItem]
+        } else {
+          // Copy other categories as-is
+          shiftyModelValue[cat] = [...currentModelValue[cat]]
+        }
+      })
 
-        // Add to random category
-        shiftyModelValue[randomCategory] = [...shiftyModelValue[randomCategory], movedItem]
+      emit('update:modelValue', shiftyModelValue)
 
-        emit('update:modelValue', shiftyModelValue)
+      // Clear highlight
+      shiftyHighlightCategory.value = null
 
-        // Clear highlight
-        shiftyHighlightCategory.value = null
-
-        announceToScreenReader(`${movedItem} moved automatically to ${randomCategory}`)
-      }, 200)
-    }
+      announceToScreenReader(`${movedItem} moved automatically to ${randomCategory}`)
+    }, 200)
   }
 
-  // Vue Concept: Screen reader accessibility
+  // Screen reader accessibility
   const announceToScreenReader = (message) => {
     screenReaderAnnouncement.value = message
 
@@ -157,7 +161,7 @@ export function useDragDrop(props, emit) {
     }, 1000)
   }
 
-  // Vue Concept: Return reactive values and functions for component use
+  // Return reactive values and functions for component use
   return {
     draggingItem,
     dragOverCategory,
