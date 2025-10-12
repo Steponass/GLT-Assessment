@@ -1,12 +1,13 @@
-<template> 
+<template>
   <div class="situational-assessment">
     <h1 class="assessment-title">Behavioral Assessment</h1>
-    <p class="assessment-description">Answer the questions to align with your actual self. There are no right or wrong answers.
+    <p class="assessment-description">Answer the questions to align with your actual self. There are no right or wrong
+      answers.
     </p>
 
 
-  <form class="questions-container" @submit.prevent="handleSubmit">
-    <!-- Q1 - Phone autocorrect (Radio)-->
+    <form class="questions-container" @submit.prevent="handleSubmit">
+      <!-- Q1 - Phone autocorrect (Radio)-->
       <div class="question-block">
         <div class="question-header">
           <h2 class="question-number">1</h2>
@@ -15,18 +16,13 @@
           </p>
         </div>
 
-        <InputRadio
-        v-model="answers.q1"
-        :options="methLabOptions"
-        :behavior-kind="getQuestionBehavior('q1')"
-        name="methLab"
-        class="question-input"
-        />
-          
+        <InputRadio v-model="answers.q1" :options="methLabOptions" :behavior-kind="getQuestionBehavior('q1')"
+          name="methLab" class="question-input" />
+
 
       </div>
 
-    <!-- Q2 - Coping mechanisms (DragDrop)-->
+      <!-- Q2 - Coping mechanisms (DragDrop)-->
       <div class="question-block">
         <div class="question-header">
           <h2 class="question-number">2</h2>
@@ -35,29 +31,72 @@
           </p>
         </div>
 
-        <DragDrop
-          v-model="answers.q2"
-          :items="copingMechanismsItems"
-          :categories="copingMechanismsCategories"
-          :behavior-kind="getQuestionBehavior('q2')"
-          class="question-input"
-        />
+        <DragDrop v-model="answers.q2" :items="copingMechanismsItems" :categories="copingMechanismsCategories"
+          :behavior-kind="getQuestionBehavior('q2')" class="question-input" />
 
+      </div>
+
+      <!-- Q3 - Overtime - Radio -->
+      <div class="question-block">
+        <div class="question-header">
+          <h2 class="question-number">3</h2>
+          <p class="question-text">
+            Your manager asks you to work over the weekend to fix a problem they created. You…
+          </p>
+          <InputRadio v-model="answers.q3" :options="overtimeOptions"
+            :behavior-kind="getQuestionBehavior('q3')" name="overtime" class="question-input" />
+        </div>
+      </div>
+
+      <!-- Q4 - Taking credit - Checkbox -->
+      <div class="question-block">
+        <div class="question-header">
+          <h2 class="question-number">4</h2>
+          <p class="question-text">
+            Your coworker takes credit for your work in front of the entire executive team. Check all your actual
+            responses:
+          </p>
+        </div>
+
+        <InputCheckbox 
+        v-model="answers.q4" 
+        :options="takingCreditOptions" 
+        :behavior-kind="getQuestionBehavior('q4')"
+        name="taking-credit" 
+        class="question-input" />
       </div>
 
       <button type="submit" class="submit-button" :disabled="!allQuestionsAnswered">
         Finish the assessment
       </button>
-  </form>
-</div>
+    </form>
+  </div>
+
+  <!-- Question 5: Performance Review - Text-->
+  <div class="question-block">
+        <div class="question-header">
+          <h2 class="question-number">5</h2>
+          <p class="question-text">
+            Complete this performance review feedback: “Shows great potential for...”
+          </p>
+        </div>
+
+        <InputText
+          v-model="answers.q5"
+          behavior-kind="toxic"
+          :toxic-replacements="performanceReviewAutocompleteOptions"
+          class="question-input"
+        />
+      </div>
+
 </template>
 
 <script setup>
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import InputRadio from '@/components/assessment/inputRadio/InputRadio.vue'
-import DragDrop from '@/components/assessment/dragDrop/DragDrop.vue'
 import InputCheckbox from '@/components/assessment/inputCheckbox/InputCheckbox.vue'
+import DragDrop from '@/components/assessment/dragDrop/DragDrop.vue'
 import InputText from '@/components/assessment/inputText/InputText.vue'
 
 const router = useRouter()
@@ -74,9 +113,16 @@ const answers = reactive({
   q5: '' // Input(text)
 })
 
+
+// Track toxic question first submissions
+const toxicQuestionFirstSubmission = reactive({
+  q4: false,
+  q5: false
+})
+
 // Q1: Pick autocorrect reaction
 const methLabOptions = [
-{ value: 'send_it_anyway', text: 'Send it anyway' },
+  { value: 'send_it_anyway', text: 'Send it anyway' },
   { value: 'blame_the_algorithm', text: 'Blame the algorithm' },
   { value: 'lean_into_it', text: 'Lean into it' },
   { value: 'change_careers', text: 'Change careers' }
@@ -95,12 +141,35 @@ const copingMechanismsItems = [
   'Googling "Is it normal to..."'
 ]
 
+const overtimeOptions = [
+  { value: 'reply_with_who_dis', text: 'Reply with "new phone who dis"' },
+  { value: 'agree_then_not_showup', text: 'Agree enthusiastically then not show up' },
+  { value: 'respond_in_haikus', text: 'Respond only in haikus' },
+  { value: 'forward_to_their_mngr', text: 'Forward the request to their manager' }
+]
+
+
+// Q4
+const takingCreditOptions = [
+  { value: 'stare', text: 'Loudly clear your throat and stare' },
+  { value: 'LinkedIn', text: 'Update LinkedIn with “Available immediately”' },
+  { value: 'former_colleague', text: 'Start referring to them as “my former colleague”' },
+  { value: 'sbutle_campaign', text: "Begin a subtle campaign of office supply theft" }
+]
+
+const performanceReviewAutocompleteOptions = [
+  "finding employment elsewhere",
+  "disappointing everyone consistently",
+  "lowering team morale'",
+  "being the eventual scapegoat",
+]
+
 const questionBehaviors = {
-  q1: 'shifty',   // 
+  q1: 'shifty',   //
   q2: 'shifty',   // DragDrop
-  q3: 'toxic',    //
+  q3: 'regular',  //
   q4: 'toxic',    //
-  q5: 'toxic',    // 
+  q5: 'toxic',    //
 }
 
 const getQuestionBehavior = (questionId) => {
@@ -111,7 +180,7 @@ const allQuestionsAnswered = computed(() => {
   // Check if all items are categorized (all items should be assigned to categories)
   const totalCategorizedItems = Object.values(answers.q2).flat().length
   const allItemsCategorized = totalCategorizedItems === copingMechanismsItems.length
-  
+
   return (
     answers.q1 !== '' &&
     allItemsCategorized &&
@@ -123,20 +192,46 @@ const allQuestionsAnswered = computed(() => {
 
 // Form submission handler
 const handleSubmit = () => {
+  // Check if any toxic questions haven't had their first submission yet
+  const hasPendingToxicFirstSubmission = Object.keys(questionBehaviors).some(questionId => {
+    if (questionBehaviors[questionId] === 'toxic') {
+      return answers[questionId] !== '' && !toxicQuestionFirstSubmission[questionId]
+    }
+    return false
+  })
+
+  // If there are toxic questions that need their first submission trigger
+  if (hasPendingToxicFirstSubmission) {
+    clearToxicInputsAndChangeText()
+    return
+  }
+
+  // Normal validation check for remaining questions
   if (!allQuestionsAnswered.value) {
+    // This would only trigger if non-toxic questions are incomplete
     console.log('Please complete all questions')
     return
   }
 
-
-  // Navigate to Digital Literacy (you'll need to add this route)
+  // All questions properly answered (including toxic after their reset)
   router.push('/summary')
+}
+
+const clearToxicInputsAndChangeText = () => {
+  Object.keys(questionBehaviors).forEach(questionId => {
+    if (questionBehaviors[questionId] === 'toxic' && answers[questionId] !== '') {
+      // Mark this toxic question as having had its first submission
+      toxicQuestionFirstSubmission[questionId] = true
+
+      // Clear the answer
+      answers[questionId] = ''
+    }
+  })
 }
 
 </script>
 
 <style>
-
 .situational-assessment {
   width: min(1200px, 95%);
   margin-inline: auto;
@@ -220,9 +315,9 @@ const handleSubmit = () => {
 .question-block.drag-drop-question {
   grid-template-columns: 1fr;
 }
+
 .drag-drop-question .question-input {
   max-width: none;
   margin-top: var(--space-16px);
 }
-
 </style>
