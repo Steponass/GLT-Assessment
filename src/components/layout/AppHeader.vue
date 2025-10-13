@@ -1,42 +1,51 @@
 <template>
   <header class="app-header">
-    <div class="header-container">
-      <div class="header-top">
-        <h1 class="header-title">
-          Skill Assessment
-        </h1>
-      </div>
-    </div>
+    <div class="header-logo">
+      <img src="/lamp_13806789.png" alt="">
+    <h1 class="header-title">GLT</h1>
+  </div>
+    <p><strong>{{ formattedCount }}</strong> users have completed this today.</p>
   </header>
 </template>
 
 <script>
 export default {
-  name: 'AppHeader'
+  name: 'AppHeader',
+  data() {
+    return {
+      usersCompletedToday: 0
+    }
+  },
+  computed: {
+    formattedCount() {
+      return this.usersCompletedToday.toLocaleString()
+    }
+  },
+  beforeMount() {
+    const min = 912
+    const max = 1835
+    this.usersCompletedToday = Math.floor(Math.random() * (max - min + 1)) + min
+  }
 }
 </script>
 
 <style scoped>
 .app-header {
-
-  position: relative;
-  z-index: 10;
-  /* Shifty behavior: slowly shifts color */
-  animation: colorShift 90s infinite;
-}
-
-.header-container {
-  padding: 1rem 2rem;
-  height: 100%;
+  padding-block: var(--space-8px);
+  padding-inline: var(--space-12px);
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.header-top {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  animation: colorShift 20s infinite;
+}
+
+.header-logo {
+  display: flex;
+  gap: var(--space-8-12px);
+}
+
+.header-logo img {
+  max-height: 40px;
 }
 
 .header-title {
@@ -44,15 +53,17 @@ export default {
   font-weight: 700;
 }
 
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
 @keyframes colorShift {
-  0% { background-color: #f3eded; }
-  50% { background-color: #e9e1e1; }
-  100% { background-color: #f5f1f1; }
+  0% {
+    background-color: #f3eded;
+  }
+
+  50% {
+    background-color: #e9e1e1;
+  }
+
+  100% {
+    background-color: #f5f1f1;
+  }
 }
 </style>

@@ -3,9 +3,9 @@
     <div class="intro-content">
       <header class="intro-header">
         <h1 class="intro-title">Skills Assessment</h1>
-        <p class="intro-subtitle">
+        <h6 class="intro-subtitle">
           Evaluate your abilities across multiple skill areas
-        </p>
+        </h6>
       </header>
 
       <section class="intro-description">
@@ -13,7 +13,7 @@
           This comprehensive assessment evaluates your skills across seven key areas:
         </p>
 
-        <ul class="skills-list">
+        <ol class="skills-list">
           <li class="skill-item">
             <strong>Personality</strong> - Understanding your work style and preferences
           </li>
@@ -24,25 +24,19 @@
             <strong>Logic & Pattern Recognition</strong> - Abstract thinking abilities
           </li>
           <li class="skill-item">
-            <strong>Literacy & Communication</strong> - Reading comprehension and verbal skills
-          </li>
-          <li class="skill-item">
             <strong>Data Analysis</strong> - Interpreting and analyzing information
           </li>
           <li class="skill-item">
             <strong>Situational Judgement</strong> - Decision-making in various scenarios
           </li>
-        </ul>
+        </ol>
       </section>
 
       <section class="intro-instructions">
-        <h2 class="instructions-title">Instructions</h2>
+        <h3 class="instructions-title">Instructions</h3>
         <ul class="instructions-list">
           <li class="instruction-item">
-            The assessment contains 32 questions across 7 sections
-          </li>
-          <li class="instruction-item">
-            You can navigate freely within each section
+            The assessment contains 26 questions across 5 sections
           </li>
           <li class="instruction-item">
             Sections must be completed in order
@@ -54,11 +48,7 @@
       </section>
 
       <div class="intro-actions">
-        <button
-          class="start-button"
-          @click="startAssessment"
-          :disabled="isStarting"
-        >
+        <button class="start-button" @click="startAssessment" :disabled="isStarting">
           {{ isStarting ? 'Starting...' : 'Begin Assessment' }}
         </button>
       </div>
@@ -116,26 +106,31 @@ export default {
 
 .intro-header {
   text-align: center;
+  margin-block: var(--space-16-24px);
 }
 
-.intro-title {
-  margin: 0;
-}
-
-.intro-subtitle {
-  margin: 0;
-}
 
 .skills-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  /* list-style: none; */
+  list-style: decimal inside;
+  margin-block: var(--space-8-12px) var(--space-24-32px);
+}
+
+
+.instructions-title {
+  text-align: center;
 }
 
 .instructions-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  list-style: crown inside;
+  margin-block: var(--space-8-12px) var(--space-24-32px);
+}
+
+@counter-style crown {
+  system: cyclic;
+  symbols: "\1F98B";
+  suffix: " ";
+  speak-as: bullets;
 }
 
 .intro-actions {
@@ -145,9 +140,14 @@ export default {
 .start-button {
   border: none;
   cursor: pointer;
-}
-
-.start-button:disabled {
-  cursor: not-allowed;
+  background-color: var(--clr-primary);
+  color: white;
+  padding: var(--space-12px) var(--space-16px);
+  transition: all 0.2s ease;
+  @media (hover: hover)  {
+    &:hover {
+    background-color: var(--clr-stroke-strong);
+  }
+  }
 }
 </style>
