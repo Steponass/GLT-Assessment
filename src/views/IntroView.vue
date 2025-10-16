@@ -36,7 +36,7 @@
         <h3 class="instructions-title">Instructions</h3>
         <ul class="instructions-list">
           <li class="instruction-item">
-            The assessment contains 26 questions across 5 sections
+            The assessment contains {{ assessmentStore.totalQuestions }} questions across 5 sections
           </li>
           <li class="instruction-item">
             Sections must be completed in order
@@ -144,10 +144,11 @@ export default {
   color: white;
   padding: var(--space-12px) var(--space-16px);
   transition: all 0.2s ease;
-  @media (hover: hover)  {
+
+  @media (hover: hover) {
     &:hover {
-    background-color: var(--clr-stroke-strong);
-  }
+      background-color: var(--clr-stroke-strong);
+    }
   }
 }
 </style>

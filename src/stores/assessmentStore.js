@@ -1,4 +1,3 @@
-// src/stores/assessmentStore.js
 import { defineStore } from 'pinia'
 
 export const useAssessmentStore = defineStore('assessment', {
@@ -8,13 +7,12 @@ export const useAssessmentStore = defineStore('assessment', {
       personality: { completed: false, currentQuestion: 1, answers: {} },
       numeracy: { completed: false, currentQuestion: 1, answers: {} },
       logic: { completed: false, currentQuestion: 1, answers: {} },
-      literacy: { completed: false, currentQuestion: 1, answers: {} },
       dataAnalysis: { completed: false, currentQuestion: 1, answers: {} },
       situational: { completed: false, currentQuestion: 1, answers: {} }
     },
     assessmentStartTime: null,
     isAssessmentCompleted: false,
-    totalQuestions: 32
+    totalQuestions: 26
   }),
 
   getters: {
@@ -36,7 +34,7 @@ export const useAssessmentStore = defineStore('assessment', {
     },
 
     getAvailableAssessmentRoutes: (state) => {
-      const routes = ['personality', 'numeracy', 'logic', 'literacy', 'dataAnalysis', 'situational']
+      const routes = ['personality', 'numeracy', 'logic', 'dataAnalysis', 'situational']
       const currentIndex = routes.indexOf(state.currentAssessmentRoute)
       return routes.slice(0, currentIndex + 1)
     }

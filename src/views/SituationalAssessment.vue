@@ -92,7 +92,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import InputRadio from '@/components/assessment/inputRadio/InputRadio.vue'
 import InputCheckbox from '@/components/assessment/inputCheckbox/InputCheckbox.vue'
