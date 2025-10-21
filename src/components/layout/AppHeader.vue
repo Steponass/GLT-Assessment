@@ -6,9 +6,11 @@
   </div>
     <p><strong>{{ formattedCount }}</strong> users have completed this today.</p>
   </header>
+
 </template>
 
 <script>
+
 export default {
   name: 'AppHeader',
   data() {

@@ -12,11 +12,9 @@
           <h2 class="question-number">1</h2>
           <div class="question-content">
             <div class="question-graph">
-              <img
-                src="/images/Pirates-and-global-warming.jpg"
+              <img src="/images/Pirates-and-global-warming.jpg"
                 alt="Graph showing correlation between pirate population and global temperature"
-                class="analysis-graph"
-              />
+                class="analysis-graph" />
             </div>
             <p class="question-text">
               Based on the pirate-temperature data, how many pirates do we need to bring global
@@ -27,12 +25,8 @@
 
         <div class="question-input">
           <!-- Vue Concept: Using InputNumber with pirate behavior -->
-          <InputNumber
-            v-model="answers.q1"
-            behavior-kind="pirate"
-            placeholder="Number of pirates needed"
-            name="pirate-analysis"
-          />
+          <InputNumber v-model="answers.q1" behavior-kind="pirate" placeholder="Number of pirates needed"
+            name="pirate-analysis" />
         </div>
       </div>
 
@@ -42,23 +36,17 @@
           <h2 class="question-number">2</h2>
           <div class="question-content">
             <div class="question-graph">
-              <img
-                src="/images/Female-height.webp"
+              <img src="/images/Female-height.webp"
                 alt="Graph comparing female heights between different countries including Latvia and India"
-                class="analysis-graph"
-              />
+                class="analysis-graph" />
             </div>
             <p class="question-text">The height difference between Latvia and India suggests:</p>
           </div>
         </div>
 
         <div class="question-input">
-          <InputRadio
-            v-model="answers.q2"
-            :options="heightAnalysisOptions"
-            behavior-kind="shifty"
-            name="height-analysis"
-          />
+          <InputRadio v-model="answers.q2" :options="heightAnalysisOptions" behavior-kind="shifty"
+            name="height-analysis" />
         </div>
       </div>
 
@@ -70,12 +58,8 @@
         </div>
 
         <div class="question-input">
-          <DragDrop
-            v-model="dataReliabilityAnswer"
-            :items="reliabilityDataPoints"
-            :categories="reliabilityCategories"
-            behavior-kind="shifty"
-          />
+          <DragDrop v-model="dataReliabilityAnswer" :items="reliabilityDataPoints" :categories="reliabilityCategories"
+            behavior-kind="shifty" />
         </div>
       </div>
 
@@ -89,12 +73,14 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAssessmentStore } from '@/stores/assessmentStore'
 import InputRadio from '@/components/assessment/inputRadio/InputRadio.vue'
 import InputNumber from '@/components/assessment/inputNumber/InputNumber.vue'
 import DragDrop from '@/components/assessment/dragDrop/DragDrop.vue'
 
-// Initialize router for navigation
+// Initialize router and store
 const router = useRouter()
+const assessmentStore = useAssessmentStore()
 
 // Vue Concept: Different answer types for different question types
 // Q1: number or string (AARRRGH), Q2: string (radio)
@@ -170,7 +156,17 @@ const handleSubmit = () => {
 
   console.log('Data Analysis Assessment Completed:', completedAssessment)
 
-  // Navigate to Digital Literacy (you'll need to add this route)
+  // Persist answers and mark completed
+  Object.entries(answers).forEach(([questionId, answer]) => {
+    if (answer !== '' && answer !== null && answer !== undefined) {
+      assessmentStore.saveAnswer('dataAnalysis', questionId, answer)
+    }
+  })
+  // DragDrop modeled answer
+  assessmentStore.saveAnswer('dataAnalysis', 'q3', dataReliabilityAnswer.value)
+  assessmentStore.markAssessmentCompleted('dataAnalysis')
+
+  // Navigate to next assessment
   router.push('/assessment/situational')
 }
 </script>

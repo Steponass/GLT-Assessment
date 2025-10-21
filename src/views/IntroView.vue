@@ -87,7 +87,8 @@ export default {
 
     return {
       isStarting,
-      startAssessment
+      startAssessment,
+      assessmentStore
     }
   }
 }

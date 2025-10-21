@@ -6,12 +6,8 @@
     </p>
 
     <form class="questions-container" @submit.prevent="handleSubmit">
-      <div
-        v-for="(question, index) in questionsToDisplay"
-        :key="question.id"
-        class="question-block"
-        :class="{ 'checkbox-question': question.type === 'checkbox' }"
-      >
+      <div v-for="(question, index) in questionsToDisplay" :key="question.id" class="question-block"
+        :class="{ 'checkbox-question': question.type === 'checkbox' }">
         <div class="question-header">
           <h2 class="question-number">{{ index + 1 }}</h2>
           <p class="question-text">{{ question.text }}</p>
@@ -21,39 +17,21 @@
         <!-- Each question can use different input components based on its requirements -->
         <div class="question-input">
           <!-- Radio Button Questions -->
-          <InputRadio
-            v-if="question.type === 'radio'"
-            v-model="answers[question.id]"
-            :options="question.options"
-            :behavior-kind="question.behaviorKind"
-            :name="`question-${question.id}`"
-          />
+          <InputRadio v-if="question.type === 'radio'" v-model="answers[question.id]" :options="question.options"
+            :behavior-kind="question.behaviorKind" :name="`question-${question.id}`" />
 
           <!-- Checkbox Questions -->
-          <InputCheckbox
-            v-else-if="question.type === 'checkbox'"
-            v-model="answers[question.id]"
-            :options="question.options"
-            :behavior-kind="question.behaviorKind"
-            :name="`question-${question.id}`"
-          />
+          <InputCheckbox v-else-if="question.type === 'checkbox'" v-model="answers[question.id]"
+            :options="question.options" :behavior-kind="question.behaviorKind" :name="`question-${question.id}`" />
 
           <!-- Number Input Questions -->
-          <InputNumber
-            v-else-if="question.type === 'number'"
-            v-model="answers[question.id]"
-            :behavior-kind="question.behaviorKind"
-            :name="`question-${question.id}`"
-            :placeholder="question.placeholder || 'Number'"
-          />
+          <InputNumber v-else-if="question.type === 'number'" v-model="answers[question.id]"
+            :behavior-kind="question.behaviorKind" :name="`question-${question.id}`"
+            :placeholder="question.placeholder || 'Number'" />
         </div>
       </div>
 
-      <button
-        type="submit"
-        class="submit-button"
-        :disabled="!allQuestionsAnswered"
-      >
+      <button type="submit" class="submit-button" :disabled="!allQuestionsAnswered">
         Submit
       </button>
     </form>
@@ -63,12 +41,14 @@
 <script setup>
 import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAssessmentStore } from '@/stores/assessmentStore'
 import InputRadio from '@/components/assessment/inputRadio/InputRadio.vue'
 import InputCheckbox from '@/components/assessment/inputCheckbox/InputCheckbox.vue'
 import InputNumber from '@/components/assessment/inputNumber/InputNumber.vue'
 
 // Initialize router for navigation
 const router = useRouter()
+const assessmentStore = useAssessmentStore()
 
 // Vue Concept: Different answer types for different question types
 // Radio: string, Checkbox: array, Number: number
@@ -182,6 +162,13 @@ const handleSubmit = () => {
   }
 
   console.log('Numeracy Assessment Completed:', answers)
+  // Persist answers to store and mark section completed
+  Object.entries(answers).forEach(([questionId, answer]) => {
+    if ((Array.isArray(answer) && answer.length > 0) || (!Array.isArray(answer) && answer !== '' && answer !== null && answer !== undefined)) {
+      assessmentStore.saveAnswer('numeracy', questionId, answer)
+    }
+  })
+  assessmentStore.markAssessmentCompleted('numeracy')
   router.push('/assessment/logic') // Navigate to next assessment
 }
 </script>
@@ -246,9 +233,7 @@ const handleSubmit = () => {
   color: var(--clr-primary);
 }
 
-.question-text {
-
-}
+.question-text {}
 
 .question-input {
   justify-self: end;
@@ -269,5 +254,4 @@ const handleSubmit = () => {
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
-
 </style>

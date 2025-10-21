@@ -41,7 +41,7 @@
   font-weight: 600;
 }
 
-:where(p, ul, ol, li, a, button, label, input, textarea) {
+:where(p, ul, ol, li, a, span, button, label, input, textarea) {
   font-size: var(--fontsize-p);
   font-family: 'PT Root UI Variable', 'Adjusted Arial Fallback', sans-serif;
   font-weight: 400;

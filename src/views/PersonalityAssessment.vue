@@ -1,9 +1,9 @@
 <template>
   <div class="personality-assessment">
-      <h1 class="assessment-title">Personality Assessment</h1>
-      <p class="assessment-description">
-        Respond to each statement based on how much you agree or disagree.
-      </p>
+    <h1 class="assessment-title">Personality Assessment</h1>
+    <p class="assessment-description">
+      Respond to each statement based on how much you agree or disagree.
+    </p>
 
     <form class="questions-container" @submit.prevent="handleSubmit">
       <div class="scale-labels">
@@ -16,11 +16,7 @@
         </div>
       </div>
 
-      <div
-        v-for="(question, index) in questionsToDisplay"
-        :key="question.id"
-        class="question-block"
-      >
+      <div v-for="(question, index) in questionsToDisplay" :key="question.id" class="question-block">
         <div class="question-header">
           <h2 class="question-number">{{ index + 1 }}</h2>
           <p class="question-text">{{ getQuestionText(question) }}</p>
@@ -28,23 +24,14 @@
 
         <!-- Vue: v-model creates two-way binding automatically -->
         <!-- This is much simpler than React's value + onChange pattern -->
-        <InputRadio
-        :ref="el => radioRefs[question.id] = el"
-          v-model="answers[question.id]"
-          :options="likertScaleOptions"
-          :behavior-kind="question.behaviorKind"
-          :name="`question-${question.id}`"
-          class="question-input"
-        />
+        <InputRadio :ref="el => radioRefs[question.id] = el" v-model="answers[question.id]"
+          :options="likertScaleOptions" :behavior-kind="question.behaviorKind" :name="`question-${question.id}`"
+          class="question-input" />
       </div>
 
-        <button
-          type="submit"
-          class="submit-button"
-          :disabled="!allQuestionsAnswered"
-        >
-          Submit
-        </button>
+      <button type="submit" class="submit-button" :disabled="!allQuestionsAnswered">
+        Submit
+      </button>
     </form>
 
   </div>
@@ -53,10 +40,12 @@
 <script setup>
 import { computed, reactive, watch, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAssessmentStore } from '@/stores/assessmentStore'
 import InputRadio from '@/components/assessment/inputRadio/InputRadio.vue'
 
-// Initialize router for navigation
+// Initialize router and store
 const router = useRouter()
+const assessmentStore = useAssessmentStore()
 
 const radioRefs = ref({})
 
@@ -164,6 +153,14 @@ const handleSubmit = () => {
     return
   }
 
+  // Persist answers to store and mark section completed
+  Object.entries(answers).forEach(([questionId, answer]) => {
+    if (answer !== '') {
+      assessmentStore.saveAnswer('personality', questionId, answer)
+    }
+  })
+  assessmentStore.markAssessmentCompleted('personality')
+
   // All questions properly answered (including toxic after their reset)
   router.push('/assessment/numeracy')
 }
@@ -199,13 +196,13 @@ watch(answers, (newAnswers) => {
 
     // Only update hasBeenAnswered for non-toxic questions during normal interaction
     if (newAnswers[questionId] !== '' &&
-        !questionStates[questionId].hasBeenAnswered &&
-        question?.behaviorKind !== 'toxic') {
+      !questionStates[questionId].hasBeenAnswered &&
+      question?.behaviorKind !== 'toxic') {
       questionStates[questionId].hasBeenAnswered = true
     }
   })
 }, { deep: true })
- // deep: true watches nested properties in objects
+// deep: true watches nested properties in objects
 </script>
 
 <style scoped>
@@ -226,6 +223,7 @@ watch(answers, (newAnswers) => {
   flex-direction: column;
   gap: var(--space-16px);
 }
+
 .scale-labels {
   display: grid;
   grid-template-columns: 1fr 400px;
@@ -238,7 +236,7 @@ watch(answers, (newAnswers) => {
   content: "";
 }
 
-.scale-labels > div {
+.scale-labels>div {
   display: flex;
   justify-content: space-between;
 }
@@ -272,5 +270,4 @@ watch(answers, (newAnswers) => {
   border: none;
   cursor: pointer;
 }
-
 </style>

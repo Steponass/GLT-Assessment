@@ -16,12 +16,8 @@
           <span class="question-hint">(Enter the next number as percentage, e.g., 25)</span>
         </div>
 
-        <InputNumber
-          v-model="answers.q1"
-          :behavior-kind="getQuestionBehavior('q1')"
-          placeholder="Enter percentage"
-          class="question-input"
-        />
+        <InputNumber v-model="answers.q1" :behavior-kind="getQuestionBehavior('q1')" placeholder="Enter percentage"
+          class="question-input" />
       </div>
 
       <!-- Question 2: Logical Fallacies (Checkbox) -->
@@ -33,13 +29,8 @@
           </p>
         </div>
 
-        <InputCheckbox
-          v-model="answers.q2"
-          :options="logicalFallaciesOptions"
-          :behavior-kind="getQuestionBehavior('q2')"
-          name="logical-fallacies"
-          class="question-input"
-        />
+        <InputCheckbox v-model="answers.q2" :options="logicalFallaciesOptions"
+          :behavior-kind="getQuestionBehavior('q2')" name="logical-fallacies" class="question-input" />
       </div>
 
       <!-- Question 3: Odd One Out (Radio) -->
@@ -51,13 +42,8 @@
           </p>
         </div>
 
-        <InputRadio
-          v-model="answers.q3"
-          :options="oddOneOutOptions"
-          :behavior-kind="getQuestionBehavior('q3')"
-          name="odd-one-out"
-          class="question-input"
-        />
+        <InputRadio v-model="answers.q3" :options="oddOneOutOptions" :behavior-kind="getQuestionBehavior('q3')"
+          name="odd-one-out" class="question-input" />
       </div>
 
       <!-- Question 4: Logical Paradox (Text with autocomplete) -->
@@ -70,13 +56,8 @@
           </p>
         </div>
 
-        <InputText
-          v-model="answers.q4"
-          behavior-kind="toxic"
-          :toxic-replacements="paradoxAutocompleteOptions"
-          placeholder="Complete the logic..."
-          class="question-input"
-        />
+        <InputText v-model="answers.q4" behavior-kind="toxic" :toxic-replacements="paradoxAutocompleteOptions"
+          placeholder="Complete the logic..." class="question-input" />
       </div>
 
       <!-- Question 5: Fibonacci Pattern (Number Input) -->
@@ -90,12 +71,8 @@
           <span class="question-hint">(Enter a number)</span>
         </div>
 
-        <InputNumber
-          v-model="answers.q5"
-          :behavior-kind="getQuestionBehavior('q5')"
-          placeholder="Number of tasks"
-          class="question-input"
-        />
+        <InputNumber v-model="answers.q5" :behavior-kind="getQuestionBehavior('q5')" placeholder="Number of tasks"
+          class="question-input" />
       </div>
 
       <!-- Question 6: Analogy (Radio) -->
@@ -107,20 +84,11 @@
           </p>
         </div>
 
-        <InputRadio
-          v-model="answers.q6"
-          :options="analogyOptions"
-          :behavior-kind="getQuestionBehavior('q6')"
-          name="analogy"
-          class="question-input"
-        />
+        <InputRadio v-model="answers.q6" :options="analogyOptions" :behavior-kind="getQuestionBehavior('q6')"
+          name="analogy" class="question-input" />
       </div>
 
-      <button
-        type="submit"
-        class="submit-button"
-        :disabled="!allQuestionsAnswered"
-      >
+      <button type="submit" class="submit-button" :disabled="!allQuestionsAnswered">
         Continue to Literacy Assessment
       </button>
     </form>
@@ -130,13 +98,15 @@
 <script setup>
 import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAssessmentStore } from '@/stores/assessmentStore'
 import InputRadio from '@/components/assessment/inputRadio/InputRadio.vue'
 import InputText from '@/components/assessment/inputText/InputText.vue'
 import InputNumber from '@/components/assessment/inputNumber/InputNumber.vue'
 import InputCheckbox from '@/components/assessment/inputCheckbox/InputCheckbox.vue'
 
-// Initialize router for navigation
+// Initialize router and store
 const router = useRouter()
+const assessmentStore = useAssessmentStore()
 
 // Vue Concept: reactive() for complex state objects
 // Since we have multiple questions with different answer types
@@ -220,7 +190,13 @@ const handleSubmit = () => {
   console.log('Logic Assessment Answers:', answers)
 
   // Navigate to next assessment
-  router.push('/assessment/literacy')
+  Object.entries(answers).forEach(([questionId, answer]) => {
+    if ((Array.isArray(answer) && answer.length > 0) || (!Array.isArray(answer) && answer !== '' && answer !== null && answer !== undefined)) {
+      assessmentStore.saveAnswer('logic', questionId, answer)
+    }
+  })
+  assessmentStore.markAssessmentCompleted('logic')
+  router.push('/assessment/data-analysis')
 }
 </script>
 
@@ -299,5 +275,4 @@ const handleSubmit = () => {
   align-self: center;
   margin-top: var(--space-24px);
 }
-
 </style>

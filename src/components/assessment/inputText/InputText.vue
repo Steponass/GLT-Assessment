@@ -31,7 +31,6 @@
 import { onBeforeUnmount } from 'vue'
 import { useInputText } from './useInputText.js'
 
-// Vue: defineProps with comprehensive validation
 const props = defineProps({
   modelValue: {
     type: String,
