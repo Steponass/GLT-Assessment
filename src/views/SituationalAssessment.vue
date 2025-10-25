@@ -43,8 +43,8 @@
           <p class="question-text">
             Your manager asks you to work over the weekend to fix a problem they created. You…
           </p>
-          <InputRadio v-model="answers.q3" :options="overtimeOptions"
-            :behavior-kind="getQuestionBehavior('q3')" name="overtime" class="question-input" />
+          <InputRadio v-model="answers.q3" :options="overtimeOptions" :behavior-kind="getQuestionBehavior('q3')"
+            name="overtime" class="question-input" />
         </div>
       </div>
 
@@ -58,22 +58,12 @@
           </p>
         </div>
 
-        <InputCheckbox 
-        v-model="answers.q4" 
-        :options="takingCreditOptions" 
-        :behavior-kind="getQuestionBehavior('q4')"
-        name="taking-credit" 
-        class="question-input" />
+        <InputCheckbox v-model="answers.q4" :options="takingCreditOptions" :behavior-kind="getQuestionBehavior('q4')"
+          name="taking-credit" class="question-input" />
       </div>
 
-      <button type="submit" class="submit-button" :disabled="!allQuestionsAnswered">
-        Finish the assessment
-      </button>
-    </form>
-  </div>
-
-  <!-- Question 5: Performance Review - Text-->
-  <div class="question-block">
+      <!-- Question 5: Performance Review - Text-->
+      <div class="question-block">
         <div class="question-header">
           <h2 class="question-number">5</h2>
           <p class="question-text">
@@ -81,13 +71,15 @@
           </p>
         </div>
 
-        <InputText
-          v-model="answers.q5"
-          behavior-kind="toxic"
-          :toxic-replacements="performanceReviewAutocompleteOptions"
-          class="question-input"
-        />
+        <InputText v-model="answers.q5" behavior-kind="toxic" :toxic-replacements="performanceReviewAutocompleteOptions"
+          class="question-input" />
       </div>
+
+      <button type="submit" class="submit-button" :disabled="!allQuestionsAnswered">
+        Finish the assessment
+      </button>
+    </form>
+  </div>
 
 </template>
 

@@ -1,10 +1,9 @@
 <template>
   <header class="app-header">
     <div class="header-logo">
-      <img src="/lamp_13806789.png" alt="">
-    <h1 class="header-title">GLT</h1>
+      <a rel="noopener noreferrer" href="https://en.wikipedia.org/wiki/Danske_Bank_money_laundering_scandal"><img src="/lamp_13806789.png" alt="GLT assessments logo"></a>
   </div>
-    <p><strong>{{ formattedCount }}</strong> users have completed this today.</p>
+    <p class="completed_today"><strong>{{ formattedCount }}</strong> users have completed this test today</p>
   </header>
 
 </template>
@@ -33,39 +32,36 @@ export default {
 
 <style scoped>
 .app-header {
+  width: 100%;
   padding-block: var(--space-8px);
-  padding-inline: var(--space-12px);
+  padding-inline: var(--space-16px);
   display: flex;
   justify-content: space-between;
   align-items: center;
   animation: colorShift 20s infinite;
 }
 
-.header-logo {
-  display: flex;
-  gap: var(--space-8-12px);
-}
-
 .header-logo img {
   max-height: 40px;
+  margin-inline-end: var(--space-12-16px);
 }
 
-.header-title {
-  font-size: var(--fontsize-h4);
-  font-weight: 700;
+.completed_today {
+  text-align: end;
+  line-height: 1.1;
 }
 
 @keyframes colorShift {
   0% {
-    background-color: #f3eded;
+    background-color: hsl(0, 20%, 94%);
   }
 
   50% {
-    background-color: #e9e1e1;
+    background-color: hsl(0, 15%, 90%);
   }
 
   100% {
-    background-color: #f5f1f1;
+    background-color: hsl(0, 17%, 95%);
   }
 }
 </style>

@@ -6,6 +6,8 @@ import AppFooter from '@/components/layout/AppFooter.vue'
 import { useAssessmentStore } from '@/stores/assessmentStore'
 import ProgressBar from '@/components/layout/ProgressBar.vue';
 
+console.log("So Danske Bank divested from Bank Hapoalim in 2024, then invested again in 2024? Jesus are these guys sneaky AF.")
+
 export default {
   name: 'App',
 
@@ -19,13 +21,15 @@ export default {
     const assessmentStore = useAssessmentStore()
     const route = useRoute()
     const isSummary = computed(() => route.name === 'summary')
+    const isIntro = computed(() => route.name === 'intro')
 
     onMounted(() => {
       assessmentStore.loadPersistedState()
     })
 
     return {
-      isSummary
+      isSummary,
+      isIntro
     }
   }
 }
@@ -34,7 +38,7 @@ export default {
 <template>
   <div id="app">
     <AppHeader />
-    <ProgressBar v-if="!isSummary" />
+    <ProgressBar v-if="!isSummary && !isIntro" />
     <main>
       <RouterView />
     </main>

@@ -60,21 +60,6 @@
           placeholder="Complete the logic..." class="question-input" />
       </div>
 
-      <!-- Question 5: Fibonacci Pattern (Number Input) -->
-      <div class="question-block">
-        <div class="question-header">
-          <h2 class="question-number">5</h2>
-          <p class="question-text">
-            Workload assignment pattern - if person A can handle 5 tasks, person B handles 8 tasks,
-            and person C handles 13 tasks, how many tasks does person D (the intern) handle?
-          </p>
-          <span class="question-hint">(Enter a number)</span>
-        </div>
-
-        <InputNumber v-model="answers.q5" :behavior-kind="getQuestionBehavior('q5')" placeholder="Number of tasks"
-          class="question-input" />
-      </div>
-
       <!-- Question 6: Analogy (Radio) -->
       <div class="question-block">
         <div class="question-header">
@@ -136,7 +121,6 @@ const allQuestionsAnswered = computed(() => {
     Array.isArray(answers.q2) && answers.q2.length > 0 &&
     answers.q3 !== '' &&
     answers.q4 !== '' &&
-    answers.q5 !== '' &&
     answers.q6 !== ''
   )
 })

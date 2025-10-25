@@ -1,16 +1,16 @@
 <template>
-  <div class="intro-container">
-    <div class="intro-content">
-      <header class="intro-header">
-        <h1 class="intro-title">Skills Assessment</h1>
-        <h6 class="intro-subtitle">
+  <div class="intro-outro-container">
+    <div class="intro-outro-content">
+      <div class="intro-outro-title">
+        <h1>Skill Assessment</h1>
+        <h6>
           Evaluate your abilities across multiple skill areas
         </h6>
-      </header>
+      </div>
 
       <section class="intro-description">
         <p class="description-text">
-          This comprehensive assessment evaluates your skills across seven key areas:
+          This comprehensive assessment evaluates your skills across five key areas:
         </p>
 
         <ol class="skills-list">
@@ -49,7 +49,7 @@
 
       <div class="intro-actions">
         <button class="start-button" @click="startAssessment" :disabled="isStarting">
-          {{ isStarting ? 'Starting...' : 'Begin Assessment' }}
+          {{ isStarting ? 'Starting...' : buttonText }}
         </button>
       </div>
     </div>
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAssessmentStore } from '@/stores/assessmentStore'
 
@@ -69,16 +69,57 @@ export default {
     const assessmentStore = useAssessmentStore()
     const isStarting = ref(false)
 
+    // Check if assessment has been started (has any answers or start time)
+    const hasStartedAssessment = computed(() => {
+      return assessmentStore.assessmentStartTime !== null ||
+        assessmentStore.getCompletedQuestionsCount > 0
+    })
+
+    // Button text based on assessment state
+    const buttonText = computed(() => {
+      return hasStartedAssessment.value ? 'Resume Assessment' : 'Begin Assessment'
+    })
+
+    // Get the appropriate assessment route to navigate to
+    const getAssessmentRoute = () => {
+      if (!hasStartedAssessment.value) {
+        return '/assessment/personality'
+      }
+
+      // Find the first incomplete assessment
+      const assessmentOrder = ['personality', 'numeracy', 'logic', 'dataAnalysis', 'situational']
+      const routeMap = {
+        personality: '/assessment/personality',
+        numeracy: '/assessment/numeracy',
+        logic: '/assessment/logic',
+        dataAnalysis: '/assessment/data-analysis',
+        situational: '/assessment/situational'
+      }
+
+      for (const assessment of assessmentOrder) {
+        if (!assessmentStore.assessmentProgress[assessment].completed) {
+          return routeMap[assessment]
+        }
+      }
+
+      // If all assessments are completed, go to summary
+      return '/summary'
+    }
+
     const startAssessment = async () => {
       isStarting.value = true
 
       try {
-        assessmentStore.startAssessment()
-        assessmentStore.setCurrentAssessmentRoute('personality')
+        // Only start assessment if it hasn't been started before
+        if (!hasStartedAssessment.value) {
+          assessmentStore.startAssessment()
+          assessmentStore.setCurrentAssessmentRoute('personality')
+        }
 
         await new Promise(resolve => setTimeout(resolve, 500))
 
-        await router.push('/assessment/personality')
+        const targetRoute = getAssessmentRoute()
+        await router.push(targetRoute)
       } catch (error) {
         console.error('Failed to start assessment:', error)
         isStarting.value = false
@@ -88,31 +129,38 @@ export default {
     return {
       isStarting,
       startAssessment,
-      assessmentStore
+      assessmentStore,
+      buttonText,
+      hasStartedAssessment
     }
   }
 }
 </script>
 
 <style scoped>
-.intro-container {
+.intro-outro-container {
   display: flex;
   justify-content: center;
+  padding-block: var(--space-8-12px);
+  padding-inline: var(--space-16px);
 }
 
-.intro-content {
-  max-width: 42rem;
-  width: 100%;
+.intro-outro-content {
+  max-width: 67ch;
 }
 
-.intro-header {
+.intro-outro-title {
   text-align: center;
   margin-block: var(--space-16-24px);
 }
 
+.intro-description,
+.intro-instructions {
+  padding-top: var(--space-12px);
+}
+
 
 .skills-list {
-  /* list-style: none; */
   list-style: decimal inside;
   margin-block: var(--space-8-12px) var(--space-24-32px);
 }
@@ -123,16 +171,11 @@ export default {
 }
 
 .instructions-list {
-  list-style: crown inside;
+  list-style: inside;
   margin-block: var(--space-8-12px) var(--space-24-32px);
 }
 
-@counter-style crown {
-  system: cyclic;
-  symbols: "\1F98B";
-  suffix: " ";
-  speak-as: bullets;
-}
+
 
 .intro-actions {
   text-align: center;
@@ -145,6 +188,7 @@ export default {
   color: white;
   padding: var(--space-12px) var(--space-16px);
   transition: all 0.2s ease;
+  margin-block-end: var(--space-32px);
 
   @media (hover: hover) {
     &:hover {

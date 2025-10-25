@@ -74,7 +74,6 @@ const inputName = computed(() => props.name)
 .radio-group {
   display: flex;
   justify-content: space-between;
-  width: 400px;
 }
 
 .radio-option {

@@ -58,8 +58,6 @@ const answers = reactive({
   q3: [], // Checkbox
   q4: null, // Number
   q5: null, // Number
-  q6: null, // Number
-  q7: null  // Number
 })
 
 // Vue Concept: Complex validation for mixed question types
@@ -135,18 +133,6 @@ const baseQuestions = [
     id: 'q5',
     type: 'number',
     text: 'You listen to coworker complaints for 45 minutes daily at your $28/hour salary. What\'s the weekly cost?',
-    behaviorKind: 'shifty'
-  },
-  {
-    id: 'q6',
-    type: 'number',
-    text: 'You receive 15 notifications per hour, each causing a 0.2% decrease in your will to live. What is your cumulative will to live after 8 hours?',
-    behaviorKind: 'shifty'
-  },
-  {
-    id: 'q7',
-    type: 'number',
-    text: 'Your manager schedules 2 pointless meetings per day, each lasting 52 minutes. How many hours of your life will be wasted in a 30-day month?',
     behaviorKind: 'shifty'
   }
 ]

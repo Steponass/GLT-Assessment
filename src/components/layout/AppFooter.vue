@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <p>GLT Assessments ®️</p>
+    <p><strong>GLT</strong> Assessments</p>
     <p>Powered by <a href="https://rushiq.netlify.app/" target="_blank" rel="noopener noreferrer">RushIQ</a></p>
   </footer>
 
