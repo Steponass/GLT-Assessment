@@ -42,12 +42,12 @@ export function useInputRadio(props, emit) {
     }
   }
 
-  // Regular behavior: 0.6 second delay before selection registers
+  // Regular behavior: 1.5 second delay before selection registers
   const handleRegularBehavior = (value) => {
     timeoutId.value = setTimeout(() => {
       selectedValue.value = value
       emit('update:modelValue', value)
-    }, 600)
+    }, 1500)
   }
 
   // Shifty behavior: Selection appears to work, then switches after 2 seconds

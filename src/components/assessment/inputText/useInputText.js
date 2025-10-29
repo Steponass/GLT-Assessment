@@ -89,7 +89,7 @@ export function useInputText(props, emit) {
 
     // Only replace if we have a meaningful word and replacement options
     if (currentWord &&
-        currentWord.length > 2 &&
+        currentWord.length > 1 &&
         props.toxicReplacements &&
         props.toxicReplacements.length > 0) {
 

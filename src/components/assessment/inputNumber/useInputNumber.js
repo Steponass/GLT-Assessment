@@ -6,6 +6,7 @@ export function useInputNumber(props, emit) {
   const internalValue = ref(props.modelValue)
   const displayValue = ref(props.modelValue?.toString() || '')
   const timeoutId = ref(null)
+  const validationError = ref('')
 
   // Vue Concept: Pirate behavior state management
   const isPirateMode = ref(false)
@@ -20,9 +21,11 @@ export function useInputNumber(props, emit) {
       displayValue.value = newValue?.toString() || ''
       isPirateMode.value = false
       showPirateMessage.value = false
+      validationError.value = ''
     } else {
       internalValue.value = newValue
       displayValue.value = newValue?.toString() || ''
+      validationError.value = ''
     }
   }, { immediate: true })
 
@@ -33,6 +36,9 @@ export function useInputNumber(props, emit) {
 
     const inputValue = event.target.value
     const numericValue = inputValue === '' ? null : parseFloat(inputValue)
+
+    // Update validation state immediately on input
+    runValidation(numericValue, inputValue)
 
     // Clear existing timeouts
     if (timeoutId.value) {
@@ -65,8 +71,11 @@ export function useInputNumber(props, emit) {
     displayValue.value = inputValue
 
     timeoutId.value = setTimeout(() => {
-      internalValue.value = numericValue
-      emit('update:modelValue', numericValue)
+      // Only emit if valid (or empty)
+      if (!validationError.value) {
+        internalValue.value = numericValue
+        emit('update:modelValue', numericValue)
+      }
     }, 500)
   }
 
@@ -76,7 +85,7 @@ export function useInputNumber(props, emit) {
     displayValue.value = inputValue
 
     timeoutId.value = setTimeout(() => {
-      if (numericValue !== null && !isNaN(numericValue)) {
+      if (!validationError.value && numericValue !== null && !isNaN(numericValue)) {
         // Vue Concept: Generate random modifications
         // +1 or -1 randomly, and random decimal places (0-3)
         const valueModification = Math.random() < 0.5 ? 1 : -1
@@ -126,10 +135,10 @@ export function useInputNumber(props, emit) {
   // Vue Concept: Pirate mode activation
   const activatePirateMode = () => {
     isPirateMode.value = true
-    displayValue.value = 'AARRRGH'
-    internalValue.value = 'AARRRGH'
+    displayValue.value = 'ARRRGH!'
+    internalValue.value = 'ARRRGH!'
     showPirateMessage.value = true
-    emit('update:modelValue', 'AARRRGH')
+    emit('update:modelValue', 'ARRRGH!')
   }
 
   // Vue Concept: Computed-like getter for template binding
@@ -142,6 +151,47 @@ export function useInputNumber(props, emit) {
   const isValidNumber = () => {
     return internalValue.value !== null && !isNaN(internalValue.value)
   }
+
+  // Validation logic for number, min/max and step
+  const runValidation = (numericValue, rawInput) => {
+    // Reset first
+    validationError.value = ''
+
+    // Allow empty input
+    if (rawInput === '' || rawInput === null || rawInput === undefined) {
+      return
+    }
+
+    // Reject non-numeric
+    if (numericValue === null || Number.isNaN(numericValue)) {
+      validationError.value = 'Please enter a valid number.'
+      return
+    }
+
+    // Min/Max checks
+    if (typeof props.min === 'number' && numericValue < props.min) {
+      validationError.value = `Value must be ≥ ${props.min}.`
+      return
+    }
+    if (typeof props.max === 'number' && numericValue > props.max) {
+      validationError.value = `Value must be ≤ ${props.max}.`
+      return
+    }
+
+    // Step check (align to min when provided, otherwise 0)
+    const step = props.step
+    if (step !== 'any') {
+      const base = typeof props.min === 'number' ? props.min : 0
+      const remainder = Math.abs((numericValue - base) % step)
+      const epsilon = 1e-9
+      if (remainder > epsilon && Math.abs(remainder - step) > epsilon) {
+        validationError.value = `Value must align to step of ${step}.`
+        return
+      }
+    }
+  }
+
+  const getValidationError = () => validationError.value
 
   // Vue Concept: Getter for pirate state (for styling and messages)
   const getIsPirateMode = () => {
@@ -157,6 +207,7 @@ export function useInputNumber(props, emit) {
     handleNumberInput,
     getCurrentDisplayValue,
     isValidNumber,
+    getValidationError,
     getIsPirateMode,
     getShowPirateMessage
   }

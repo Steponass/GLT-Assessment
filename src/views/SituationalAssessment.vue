@@ -1,13 +1,11 @@
 <template>
-  <div class="situational-assessment">
+  <div class="assessment">
     <h1 class="assessment-title">Behavioral Assessment</h1>
     <p class="assessment-description">Answer the questions to align with your actual self. There are no right or wrong
       answers.
     </p>
 
-
     <form class="questions-container" @submit.prevent="handleSubmit">
-      <!-- Q1 - Phone autocorrect (Radio)-->
       <div class="question-block">
         <div class="question-header">
           <h2 class="question-number">1</h2>
@@ -18,37 +16,35 @@
 
         <InputRadio v-model="answers.q1" :options="methLabOptions" :behavior-kind="getQuestionBehavior('q1')"
           name="methLab" class="question-input" />
-
-
       </div>
-
-      <!-- Q2 - Coping mechanisms (DragDrop)-->
-      <div class="question-block">
+      <div class="question-block drag-drop-question">
         <div class="question-header">
           <h2 class="question-number">2</h2>
-          <p class="question-text">
-            Categorize these coping mechanisms:
-          </p>
+          <div class="question-content">
+            <p class="question-text">
+              Categorize these coping mechanisms:
+            </p>
+          </div>
         </div>
 
-        <DragDrop v-model="answers.q2" :items="copingMechanismsItems" :categories="copingMechanismsCategories"
-          :behavior-kind="getQuestionBehavior('q2')" class="question-input" />
-
+        <div class="question-input">
+          <DragDrop v-model="answers.q2" :items="copingMechanismsItems" :categories="copingMechanismsCategories"
+            :behavior-kind="getQuestionBehavior('q2')" />
+        </div>
       </div>
 
-      <!-- Q3 - Overtime - Radio -->
       <div class="question-block">
         <div class="question-header">
           <h2 class="question-number">3</h2>
           <p class="question-text">
             Your manager asks you to work over the weekend to fix a problem they created. You…
           </p>
-          <InputRadio v-model="answers.q3" :options="overtimeOptions" :behavior-kind="getQuestionBehavior('q3')"
-            name="overtime" class="question-input" />
+
         </div>
+        <InputRadio v-model="answers.q3" :options="overtimeOptions" :behavior-kind="getQuestionBehavior('q3')"
+        name="overtime" class="question-input" />
       </div>
 
-      <!-- Q4 - Taking credit - Checkbox -->
       <div class="question-block">
         <div class="question-header">
           <h2 class="question-number">4</h2>
@@ -62,7 +58,6 @@
           name="taking-credit" class="question-input" />
       </div>
 
-      <!-- Question 5: Performance Review - Text-->
       <div class="question-block">
         <div class="question-header">
           <h2 class="question-number">5</h2>
@@ -86,12 +81,14 @@
 <script setup>
 import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAssessmentStore } from '@/stores/assessmentStore'
 import InputRadio from '@/components/assessment/inputRadio/InputRadio.vue'
 import InputCheckbox from '@/components/assessment/inputCheckbox/InputCheckbox.vue'
 import DragDrop from '@/components/assessment/dragDrop/DragDrop.vue'
 import InputText from '@/components/assessment/inputText/InputText.vue'
 
 const router = useRouter()
+const assessmentStore = useAssessmentStore()
 
 const answers = reactive({
   q1: '', // Radio selection
@@ -105,12 +102,6 @@ const answers = reactive({
   q5: '' // Input(text)
 })
 
-
-// Track toxic question first submissions
-const toxicQuestionFirstSubmission = reactive({
-  q4: false,
-  q5: false
-})
 
 // Q1: Pick autocorrect reaction
 const methLabOptions = [
@@ -182,127 +173,25 @@ const allQuestionsAnswered = computed(() => {
   )
 })
 
-// Form submission handler
 const handleSubmit = () => {
-  // Check if any toxic questions haven't had their first submission yet
-  const hasPendingToxicFirstSubmission = Object.keys(questionBehaviors).some(questionId => {
-    if (questionBehaviors[questionId] === 'toxic') {
-      return answers[questionId] !== '' && !toxicQuestionFirstSubmission[questionId]
-    }
-    return false
-  })
-
-  // If there are toxic questions that need their first submission trigger
-  if (hasPendingToxicFirstSubmission) {
-    clearToxicInputsAndChangeText()
-    return
-  }
-
-  // Normal validation check for remaining questions
   if (!allQuestionsAnswered.value) {
-    // This would only trigger if non-toxic questions are incomplete
-    console.log('Please complete all questions')
     return
   }
 
-  // All questions properly answered (including toxic after their reset)
-  router.push('/summary')
-}
-
-const clearToxicInputsAndChangeText = () => {
-  Object.keys(questionBehaviors).forEach(questionId => {
-    if (questionBehaviors[questionId] === 'toxic' && answers[questionId] !== '') {
-      // Mark this toxic question as having had its first submission
-      toxicQuestionFirstSubmission[questionId] = true
-
-      // Clear the answer
-      answers[questionId] = ''
+  // Persist answers to store and mark section completed
+  Object.entries(answers).forEach(([questionId, answer]) => {
+    if ((Array.isArray(answer) && answer.length > 0) || (!Array.isArray(answer) && answer !== '' && answer !== null && answer !== undefined)) {
+      assessmentStore.saveAnswer('situational', questionId, answer)
     }
   })
+  assessmentStore.markAssessmentCompleted('numeracy')
+
+  router.push('/summary')
 }
 
 </script>
 
 <style>
-.situational-assessment {
-  width: min(1200px, 95%);
-  margin-inline: auto;
-  padding-block: var(--space-12-16px);
-}
-
-.assessment-title {
-  text-align: center;
-  margin-bottom: var(--space-16-24px);
-  font-size: var(--fontsize-h2);
-  color: var(--clr-text-primary);
-}
-
-.assessment-description {
-  text-align: center;
-  margin-bottom: var(--space-24-32px);
-  color: var(--clr-text-secondary);
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.questions-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-24-32px);
-}
-
-.question-block {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-12-16px);
-  padding: var(--space-16-24px);
-  background-color: var(--clr-background-secondary);
-  border-radius: var(--border-radius-medium);
-  border: 1px solid var(--clr-border-light);
-}
-
-.question-header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8px);
-}
-
-.question-number {
-  font-size: var(--fontsize-h4);
-  color: var(--clr-primary);
-  font-weight: 600;
-  margin: 0;
-}
-
-.question-text {
-  font-size: var(--fontsize-body);
-  color: var(--clr-text-primary);
-  line-height: 1.5;
-  margin: 0;
-}
-
-.question-input {
-  justify-self: start;
-  width: 100%;
-  max-width: 500px;
-}
-
-.submit-button {
-  background-color: var(--clr-primary);
-  color: white;
-  padding: var(--space-12-16px) var(--space-32-48px);
-  border: none;
-  border-radius: var(--border-radius-small);
-  font-size: var(--fontsize-body);
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  align-self: center;
-  margin-top: var(--space-24px);
-}
-
-/* Dragndrop */
-
 
 .question-block.drag-drop-question {
   grid-template-columns: 1fr;
@@ -312,4 +201,5 @@ const clearToxicInputsAndChangeText = () => {
   max-width: none;
   margin-top: var(--space-16px);
 }
+
 </style>

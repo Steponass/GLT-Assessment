@@ -1,35 +1,34 @@
 <template>
-  <div class="personality-assessment">
+  <div class="assessment">
     <h1 class="assessment-title">Personality Assessment</h1>
     <p class="assessment-description">
       Respond to each statement based on how much you agree or disagree.
     </p>
 
     <form class="questions-container" @submit.prevent="handleSubmit">
-      <div class="scale-labels">
-        <div>
-          <span class="scale-label">Strongly Disagree</span>
-          <span class="scale-label">Disagree</span>
-          <span class="scale-label">Neutral</span>
-          <span class="scale-label">Agree</span>
-          <span class="scale-label">Strongly Agree</span>
-        </div>
-      </div>
-
       <div v-for="(question, index) in questionsToDisplay" :key="question.id" class="question-block">
         <div class="question-header">
           <h2 class="question-number">{{ index + 1 }}</h2>
           <p class="question-text">{{ getQuestionText(question) }}</p>
         </div>
 
-        <!-- Vue: v-model creates two-way binding automatically -->
-        <!-- This is much simpler than React's value + onChange pattern -->
-        <InputRadio :ref="el => radioRefs[question.id] = el" v-model="answers[question.id]"
-          :options="likertScaleOptions" :behavior-kind="question.behaviorKind" :name="`question-${question.id}`"
-          class="question-input" />
+        <div class="question-response">
+          <div class="scale-labels">
+            <span class="scale-label">Strongly Disagree</span>
+            <span class="scale-label">Disagree</span>
+            <span class="scale-label">Neutral</span>
+            <span class="scale-label">Agree</span>
+            <span class="scale-label">Strongly Agree</span>
+          </div>
+
+          <!-- Vue: v-model creates two-way binding automatically -->
+          <InputRadio :ref="el => radioRefs[question.id] = el" v-model="answers[question.id]"
+            :options="likertScaleOptions" :behavior-kind="question.behaviorKind" :name="`question-${question.id}`"
+            class="question-input" />
+        </div>
       </div>
 
-      <button type="submit" class="submit-button" :disabled="!allQuestionsAnswered">
+      <button type="submit" :disabled="!allQuestionsAnswered">
         Submit
       </button>
     </form>
@@ -38,18 +37,17 @@
 </template>
 
 <script setup>
-import { computed, reactive, watch, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAssessmentStore } from '@/stores/assessmentStore'
 import InputRadio from '@/components/assessment/inputRadio/InputRadio.vue'
 
-// Initialize router and store
 const router = useRouter()
 const assessmentStore = useAssessmentStore()
 
 const radioRefs = ref({})
 
-// Vue Concept: reactive() vs ref() for complex objects
+// Vue: reactive() vs ref() for complex objects
 // reactive() is better for objects with multiple properties that change together
 // ref() is better for primitives or when you need to replace the entire object
 const answers = reactive({
@@ -69,8 +67,7 @@ const questionStates = reactive({
   q5: { hasBeenAnswered: false }
 })
 
-// Vue Concept: Computed properties for derived state
-// This automatically updates whenever answers change - no dependencies needed!
+// Vue: Computed properties for derived state
 const allQuestionsAnswered = computed(() => {
   return Object.values(answers).every(answer => answer !== '')
 })
@@ -116,10 +113,8 @@ const getQuestionText = (question) => {
   return question.text
 }
 
-// Vue: Computed property that depends on multiple reactive sources
 const questionsToDisplay = computed(() => baseQuestions)
 
-// Likert scale options (1-5)
 const likertScaleOptions = [
   { value: '1' },
   { value: '2' },
@@ -129,7 +124,7 @@ const likertScaleOptions = [
 ]
 
 // Form submission handler
-// Vue Concept: Event handlers in Vue don't need useCallback optimization
+// Vue: Event handlers in Vue don't need useCallback optimization
 
 const handleSubmit = () => {
   // Check if any toxic questions haven't had their first submission yet
@@ -149,7 +144,6 @@ const handleSubmit = () => {
   // Normal validation check for remaining questions
   if (!allQuestionsAnswered.value) {
     // This would only trigger if non-toxic questions are incomplete
-    console.log('Please complete all questions')
     return
   }
 
@@ -186,88 +180,30 @@ const clearToxicInputsAndChangeText = () => {
   })
 }
 
-// Vue Concept: Watchers for side effects
-// We can watch for answer changes to update question states
-
-// Watch for changes in answers to track which questions have been answered
-watch(answers, (newAnswers) => {
-  Object.keys(newAnswers).forEach(questionId => {
-    const question = baseQuestions.find(q => q.id === questionId)
-
-    // Only update hasBeenAnswered for non-toxic questions during normal interaction
-    if (newAnswers[questionId] !== '' &&
-      !questionStates[questionId].hasBeenAnswered &&
-      question?.behaviorKind !== 'toxic') {
-      questionStates[questionId].hasBeenAnswered = true
-    }
-  })
-}, { deep: true })
-// deep: true watches nested properties in objects
 </script>
 
-<style scoped>
-.personality-assessment {
-  width: min(1024px, 95%);
-  margin: 0 auto;
-  padding-block: var(--space-12-16px);
-}
+<style>
 
-.assessment-title {
-  justify-self: center;
-  margin-bottom: var(--space-16-24px);
-  font-size: var(--fontsize-h2);
-}
-
-.questions-container {
+.question-response {
   display: flex;
   flex-direction: column;
-  gap: var(--space-16px);
+  gap: var(--space-8px);
+  max-width: 100%;
 }
 
 .scale-labels {
-  display: grid;
-  grid-template-columns: 1fr 400px;
-  gap: var(--space-12-16px);
-  margin-bottom: var(--space-12-16px);
-
-}
-
-.scale-labels::before {
-  content: "";
-}
-
-.scale-labels>div {
   display: flex;
   justify-content: space-between;
+  gap: var(--space-8px);
 }
 
 .scale-label {
   flex: 1;
   text-align: center;
-}
-
-.question-block {
-  display: grid;
-  grid-template-columns: 1fr 400px;
-  gap: 1rem;
-  align-items: center;
-}
-
-.question-header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-12px);
+  font-size: var(--fontsize-s);
 }
 
 .question-number {
   font-size: var(--fontsize-h4);
-}
-
-.submit-button {
-  background-color: var(--clr-primary);
-  color: white;
-  padding: var(--space-12-16px) var(--space-32-48px);
-  border: none;
-  cursor: pointer;
 }
 </style>

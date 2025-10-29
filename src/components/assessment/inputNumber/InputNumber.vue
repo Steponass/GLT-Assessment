@@ -1,28 +1,20 @@
 <template>
   <div class="number-input-wrapper">
-    <input
-      type="text"
-      :name="inputName"
-      :value="getCurrentDisplayValue()"
-      @input="handleNumberInput"
-      :placeholder="placeholder"
-      :min="min"
-      :max="max"
-      :step="step"
-      :readonly="getIsPirateMode()"
-      class="number-input"
+    <input type="text" :name="inputName" :value="getCurrentDisplayValue()" @input="handleNumberInput"
+      :placeholder="placeholder" :min="min" :max="max" :step="step" :readonly="getIsPirateMode()" class="number-input"
       :class="{
-        'pirate-mode': getIsPirateMode()
-      }"
-    />
+        'pirate-mode': getIsPirateMode(),
+        'has-error': !!getValidationError()
+      }" :aria-invalid="!!getValidationError()"
+      :aria-describedby="getValidationError() ? `${inputName}-error` : undefined" />
 
     <!-- Vue Concept: Conditional rendering for pirate message -->
-    <div
-      v-if="getShowPirateMessage()"
-      class="pirate-message"
-      aria-live="polite"
-    >
+    <div v-if="getShowPirateMessage()" class="pirate-message" aria-live="polite">
       The pirates have taken over 🏴‍☠️
+    </div>
+
+    <div v-if="getValidationError()" :id="`${inputName}-error`" class="input-error" role="alert" aria-live="polite">
+      {{ getValidationError() }}
     </div>
   </div>
 </template>
@@ -38,8 +30,8 @@ const props = defineProps({
     validator: (value) => {
       // Vue Concept: Allow null for empty state, numbers, or pirate string
       return value === null ||
-             typeof value === 'number' ||
-             value === 'AARRRGH'
+        typeof value === 'number' ||
+        value === 'ARRRGH'
     }
   },
   behaviorKind: {
@@ -75,9 +67,9 @@ const emit = defineEmits(['update:modelValue'])
 const {
   handleNumberInput,
   getCurrentDisplayValue,
-  isValidNumber,
   getIsPirateMode,
-  getShowPirateMessage
+  getShowPirateMessage,
+  getValidationError
 } = useInputNumber(props, emit)
 
 const inputName = computed(() => props.name)
@@ -102,6 +94,10 @@ const inputName = computed(() => props.name)
   outline: none;
   border-color: var(--clr-primary);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--clr-primary) 20%, transparent);
+}
+
+.number-input.has-error {
+  border-color: var(--clr-danger, #dc3545);
 }
 
 /* Vue Concept: Pirate mode styling */
@@ -133,11 +129,26 @@ const inputName = computed(() => props.name)
   z-index: 10;
 }
 
+.input-error {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-top: var(--space-4px);
+  padding: var(--space-8px);
+  background-color: #fdecec;
+  border: 1px solid var(--clr-error);
+  border-radius: var(--radius-4px);
+  font-size: var(--fontsize-s);
+  color: var(--clr-error);
+  text-align: center;
+}
+
 @keyframes pirateAppear {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

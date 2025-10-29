@@ -13,42 +13,42 @@
           This comprehensive assessment evaluates your skills across five key areas:
         </p>
 
-        <ol class="skills-list">
-          <li class="skill-item">
-            <strong>Personality</strong> - Understanding your work style and preferences
+        <ol class="skills-list stack">
+          <li>
+            <strong>Personality:</strong> Understanding your work style and preferences
           </li>
-          <li class="skill-item">
-            <strong>Numeracy</strong> - Mathematical reasoning and problem solving
+          <li>
+            <strong>Numeracy:</strong> Mathematical reasoning and problem solving
           </li>
-          <li class="skill-item">
-            <strong>Logic & Pattern Recognition</strong> - Abstract thinking abilities
+          <li>
+            <strong>Logic & Pattern Recognition:</strong> Abstract thinking abilities
           </li>
-          <li class="skill-item">
-            <strong>Data Analysis</strong> - Interpreting and analyzing information
+          <li>
+            <strong>Data Analysis:</strong> Interpreting and analyzing information
           </li>
-          <li class="skill-item">
-            <strong>Situational Judgement</strong> - Decision-making in various scenarios
+          <li>
+            <strong>Situational Judgement:</strong> Decision-making in various scenarios
           </li>
         </ol>
       </section>
 
       <section class="intro-instructions">
         <h3 class="instructions-title">Instructions</h3>
-        <ul class="instructions-list">
-          <li class="instruction-item">
+        <ul class="instructions-list stack">
+          <li>
             The assessment contains {{ assessmentStore.totalQuestions }} questions across 5 sections
           </li>
-          <li class="instruction-item">
+          <li>
             Sections must be completed in order
           </li>
-          <li class="instruction-item">
+          <li>
             Your progress will be automatically saved
           </li>
         </ul>
       </section>
 
       <div class="intro-actions">
-        <button class="start-button" @click="startAssessment" :disabled="isStarting">
+        <button @click="startAssessment" :disabled="isStarting">
           {{ isStarting ? 'Starting...' : buttonText }}
         </button>
       </div>
@@ -80,7 +80,7 @@ export default {
       return hasStartedAssessment.value ? 'Resume Assessment' : 'Begin Assessment'
     })
 
-    // Get the appropriate assessment route to navigate to
+    // Get the right assessment route to navigate to
     const getAssessmentRoute = () => {
       if (!hasStartedAssessment.value) {
         return '/assessment/personality'
@@ -102,7 +102,7 @@ export default {
         }
       }
 
-      // If all assessments are completed, go to summary
+      // If all assessments completed, go to summary
       return '/summary'
     }
 
@@ -154,46 +154,31 @@ export default {
   margin-block: var(--space-16-24px);
 }
 
+.intro-outro-title h6 {
+  margin-top: var(--space-12px);
+  color: var(--clr-text-weak);
+}
+
 .intro-description,
 .intro-instructions {
   padding-top: var(--space-12px);
 }
-
 
 .skills-list {
   list-style: decimal inside;
   margin-block: var(--space-8-12px) var(--space-24-32px);
 }
 
-
 .instructions-title {
   text-align: center;
 }
 
 .instructions-list {
-  list-style: inside;
+  list-style: inside square;
   margin-block: var(--space-8-12px) var(--space-24-32px);
 }
 
-
-
 .intro-actions {
   text-align: center;
-}
-
-.start-button {
-  border: none;
-  cursor: pointer;
-  background-color: var(--clr-primary);
-  color: white;
-  padding: var(--space-12px) var(--space-16px);
-  transition: all 0.2s ease;
-  margin-block-end: var(--space-32px);
-
-  @media (hover: hover) {
-    &:hover {
-      background-color: var(--clr-stroke-strong);
-    }
-  }
 }
 </style>

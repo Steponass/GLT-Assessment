@@ -120,6 +120,10 @@ export const useAssessmentStore = defineStore('assessment', {
       } catch (error) {
         console.warn('Failed to clear assessment state from localStorage:', error)
       }
+    },
+    loadPersistedState() {
+      const loadedState = loadStateFromStorage()
+      Object.assign(this, loadedState)
     }
   }
 })

@@ -34,13 +34,6 @@ const props = defineProps({
   options: {
     type: Array,
     required: true,
-    validator: (options) => {
-      return options.every(option =>
-        typeof option === 'object' &&
-        'value' in option &&
-        'text' in option
-      )
-    }
   },
   behaviorKind: {
     type: String,
@@ -85,8 +78,8 @@ const inputName = computed(() => props.name)
 
 .radio-label {
   display: flex;
-  align-items: center;
-  gap: var(--space-8px);
+margin-block-start: var(--space-8px); 
+ gap: var(--space-8px);
   cursor: pointer;
 }
 

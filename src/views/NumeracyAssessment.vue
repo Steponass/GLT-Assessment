@@ -1,37 +1,31 @@
 <template>
-  <div class="numeracy-assessment">
+  <div class="assessment">
     <h1 class="assessment-title">Numeracy Assessment</h1>
     <p class="assessment-description">
-      Test your mathematical reasoning and problem-solving skills with these practical scenarios.
+      Test your mathematical reasoning and problem-solving skills.
     </p>
 
     <form class="questions-container" @submit.prevent="handleSubmit">
-      <div v-for="(question, index) in questionsToDisplay" :key="question.id" class="question-block"
-        :class="{ 'checkbox-question': question.type === 'checkbox' }">
+      <div v-for="(question, index) in questionsToDisplay" :key="question.id" class="question-block">
         <div class="question-header">
           <h2 class="question-number">{{ index + 1 }}</h2>
           <p class="question-text">{{ question.text }}</p>
         </div>
 
-        <!-- Vue Concept: Dynamic component rendering based on question type -->
-        <!-- Each question can use different input components based on its requirements -->
         <div class="question-input">
-          <!-- Radio Button Questions -->
           <InputRadio v-if="question.type === 'radio'" v-model="answers[question.id]" :options="question.options"
             :behavior-kind="question.behaviorKind" :name="`question-${question.id}`" />
 
-          <!-- Checkbox Questions -->
           <InputCheckbox v-else-if="question.type === 'checkbox'" v-model="answers[question.id]"
             :options="question.options" :behavior-kind="question.behaviorKind" :name="`question-${question.id}`" />
 
-          <!-- Number Input Questions -->
           <InputNumber v-else-if="question.type === 'number'" v-model="answers[question.id]"
             :behavior-kind="question.behaviorKind" :name="`question-${question.id}`"
             :placeholder="question.placeholder || 'Number'" />
         </div>
       </div>
 
-      <button type="submit" class="submit-button" :disabled="!allQuestionsAnswered">
+      <button type="submit" :disabled="!allQuestionsAnswered">
         Submit
       </button>
     </form>
@@ -46,12 +40,9 @@ import InputRadio from '@/components/assessment/inputRadio/InputRadio.vue'
 import InputCheckbox from '@/components/assessment/inputCheckbox/InputCheckbox.vue'
 import InputNumber from '@/components/assessment/inputNumber/InputNumber.vue'
 
-// Initialize router for navigation
 const router = useRouter()
 const assessmentStore = useAssessmentStore()
 
-// Vue Concept: Different answer types for different question types
-// Radio: string, Checkbox: array, Number: number
 const answers = reactive({
   q1: '', // Radio
   q2: '', // Radio
@@ -60,7 +51,7 @@ const answers = reactive({
   q5: null, // Number
 })
 
-// Vue Concept: Complex validation for mixed question types
+// Vue: Complex validation for mixed question types
 // Each question type has different "answered" criteria
 const allQuestionsAnswered = computed(() => {
   return Object.entries(answers).every(([questionId, answer]) => {
@@ -79,7 +70,7 @@ const allQuestionsAnswered = computed(() => {
   })
 })
 
-// Vue Concept: Mixed question type data structure
+// Vue: Mixed question type data structure
 // Each question specifies its component type and specific props
 const baseQuestions = [
   {
@@ -137,17 +128,14 @@ const baseQuestions = [
   }
 ]
 
-// Vue Concept: Computed property for template data
+// Vue: Computed property for template data
 const questionsToDisplay = computed(() => baseQuestions)
 
-// Form submission handler
 const handleSubmit = () => {
   if (!allQuestionsAnswered.value) {
-    console.log('Please complete all questions')
     return
   }
 
-  console.log('Numeracy Assessment Completed:', answers)
   // Persist answers to store and mark section completed
   Object.entries(answers).forEach(([questionId, answer]) => {
     if ((Array.isArray(answer) && answer.length > 0) || (!Array.isArray(answer) && answer !== '' && answer !== null && answer !== undefined)) {
@@ -155,89 +143,10 @@ const handleSubmit = () => {
     }
   })
   assessmentStore.markAssessmentCompleted('numeracy')
-  router.push('/assessment/logic') // Navigate to next assessment
+  router.push('/assessment/logic')
 }
 </script>
 
 <style scoped>
-.numeracy-assessment {
-  width: min(1024px, 95%);
-  margin: 0 auto;
-  padding-block: var(--space-12-16px);
-}
 
-.assessment-title {
-  text-align: center;
-  margin-bottom: var(--space-16-24px);
-  font-size: var(--fontsize-h2);
-}
-
-.assessment-description {
-  text-align: center;
-  margin-bottom: var(--space-24-32px);
-  color: var(--clr-text-secondary, #666);
-}
-
-.questions-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-24-32px);
-}
-
-.question-block {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--space-16-24px);
-  align-items: flex-start;
-  padding: var(--space-16-24px);
-  border: 1px solid var(--clr-border-light, #e0e0e0);
-  border-radius: 8px;
-  background-color: var(--clr-background-subtle, #fafafa);
-}
-
-/* Vue Concept: Dynamic styling based on question type */
-/* Checkbox questions need more space due to vertical layout */
-.checkbox-question {
-  grid-template-columns: 1fr;
-  gap: var(--space-12-16px);
-}
-
-.checkbox-question .question-input {
-  justify-self: start;
-  width: 100%;
-}
-
-.question-header {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-12px);
-}
-
-.question-number {
-  font-size: var(--fontsize-h4);
-  font-weight: bold;
-  color: var(--clr-primary);
-}
-
-.question-text {}
-
-.question-input {
-  justify-self: end;
-  min-width: 100px;
-}
-
-/* Vue Concept: Number input specific styling */
-.question-input:has(input[type="number"]) {
-  min-width: 200px;
-}
-
-.submit-button {
-  align-self: center;
-  background-color: var(--clr-primary);
-  color: white;
-  padding: var(--space-12-16px) var(--space-32-48px);
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
 </style>

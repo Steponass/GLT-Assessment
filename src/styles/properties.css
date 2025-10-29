@@ -1,5 +1,3 @@
-
-
 /* SPACING, RADIUS */
 :root {
   --space-4px: 4px;
@@ -39,6 +37,7 @@
 --clr-text-weak:   hsl(0,     0%, 25%);
 --clr-stroke-strong:hsl(187, 39%, 36%);
 --clr-stroke-weak: hsl(187,  39%, 76%);
+--clr-error:         hsl(0, 68%, 51%);
 }
 
 /* SHADOWS */

@@ -8,20 +8,12 @@ const personalityProfiles = [
     recommendedRole: "Deputy Assistant to the Regional Manager"
   },
   {
-    id: 'moderateResistance',
-    title: "The Quiet Questioner",
-    description: "You show dangerous signs of independent thought. We recommend immediate remedial training.",
-    strengths: ["Occasionally has ideas", "Sometimes asks 'why'"],
-    opportunities: ["Too much critical thinking", "Insufficient acceptance of status quo"],
-    recommendedRole: "Permanent Intern (with 10 years experience required)"
-  },
-  {
     id: 'toxicPositivity',
     title: "The Corporate Cheerleader",
     description: "Your aggressive enthusiasm and mandatory fun attitude makes everyone deeply uncomfortable, which is perfect for Human Resources.",
     strengths: ["Forces team bonding", "Calls meetings 'opportunities'", "Genuinely enjoys icebreakers"],
     opportunities: ["Not enough pizza parties", "Could use more motivational posters"],
-    recommendedRole: "Chief Happiness Officer (unpaid position)"
+    recommendedRole: "Chief Happiness Officer"
   },
   {
     id: 'busyDoingNothing',
@@ -37,15 +29,7 @@ const personalityProfiles = [
     description: "You create 47-step workflows for tasks that take 5 minutes. Your forms have forms. Excellence through bureaucracy.",
     strengths: ["Documents everything twice", "Meeting minutes include bathroom breaks", "Can make coffee require approval"],
     opportunities: ["Only has 73 templates", "Some processes still efficient"],
-    recommendedRole: "VP of Unnecessary Procedures"
-  },
-  {
-    id: 'replyAllWarrior',
-    title: "The Reply-All Terrorist",
-    description: "Your commitment to keeping everyone informed about everything always makes you the communication hero nobody wanted.",
-    strengths: ["CCs the entire company on lunch orders", "Responds 'Thanks!' to 500-person threads", "Shares every thought"],
-    opportunities: ["Some emails lack 'Per my last email'", "Could use more fonts"],
-    recommendedRole: "Director of Digital Noise"
+    recommendedRole: "Senior Process Procedure Manager"
   },
   {
     id: 'buzzwordNinja',
@@ -54,14 +38,6 @@ const personalityProfiles = [
     strengths: ["Leverages paradigm shifts", "Disrupts verticals", "Circles back to square one"],
     opportunities: ["Occasional use of real words", "Not enough acronyms"],
     recommendedRole: "Chief Ideation Catalyst"
-  },
-  {
-    id: 'meetingMarathoner',
-    title: "The Calendar Terrorist",
-    description: "You schedule meetings to discuss emails about previous meetings. Your superpower is making 5-minute discussions take 2 hours.",
-    strengths: ["Books rooms for 'quick syncs'", "Sends 19-page agendas", "No agenda too vague"],
-    opportunities: ["Some time slots still free", "Allows bio breaks"],
-    recommendedRole: "Senior Meeting Manager"
   },
   {
     id: 'creditVampire',
