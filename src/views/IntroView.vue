@@ -3,9 +3,6 @@
     <div class="intro-outro-content">
       <div class="intro-outro-title">
         <h1>Skill Assessment</h1>
-        <h6>
-          Evaluate your abilities across multiple skill areas
-        </h6>
       </div>
 
       <section class="intro-description">
