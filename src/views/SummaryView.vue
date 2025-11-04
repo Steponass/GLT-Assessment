@@ -28,7 +28,12 @@
         <h5>Recommended Role:</h5>
         <p>{{ userPersonalityProfile.recommendedRole }}</p>
 
-        <p class="in-touch-shortly">We'll be in touch with you shortly with a generic “Not this time honey, but we are sooo impressed” email.</p>
+
+        <div class="in-touch-shortly">
+        <hr/>
+        <p>We'll be in touch with you shortly with a generic “Not this time honey, but we were sooo impressed” email.</p>
+        <p>Disagree with the verdict? <a href="">Rerun the algorithm</a></p>
+      </div>
       </section>
     </div>
   </div>
@@ -75,13 +80,20 @@ export default {
   margin-block: var(--space-16-24px);
 }
 
+.intro-outro-title h1 {
+  margin-bottom: var(--space-12px);
+}
 .personality_profile_container {
   margin-inline: var(--space-16px);
 }
 
 .personality_title_container {
   text-align: center;
-  margin-block: var(--space-16px);
+  margin-block: var(--space-24px);
+}
+
+.personality_title_container h5 {
+  color: var(--clr-primary);
 }
 
 .personality_title {
@@ -95,7 +107,22 @@ export default {
   margin-block: var(--space-8-12px) var(--space-16-24px);
 }
 
-.in-touch-shortly {
-  margin-block-start: var(--space-16-24px);
+hr {
+  border: 0.5px solid var(--clr-stroke-weak);
+  margin-bottom: var(--space-12px);
 }
+
+.in-touch-shortly {
+  margin-block: var(--space-32px);
+}
+
+.in-touch-shortly a {
+  color: var(--clr-primary);
+  text-decoration: underline;
+  font-weight: 500;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
 </style>
