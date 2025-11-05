@@ -8,7 +8,6 @@
       }" :aria-invalid="!!getValidationError()"
       :aria-describedby="getValidationError() ? `${inputName}-error` : undefined" />
 
-    <!-- Vue Concept: Conditional rendering for pirate message -->
     <div v-if="getShowPirateMessage()" class="pirate-message" aria-live="polite">
       The pirates have taken over 🏴‍☠️
     </div>
@@ -63,7 +62,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-// Vue Concept: Destructure only needed functions from composable
+// Vue: Destructure only needed functions from composable
 const {
   handleNumberInput,
   getCurrentDisplayValue,

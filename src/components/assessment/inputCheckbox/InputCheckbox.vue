@@ -99,9 +99,10 @@ const inputName = computed(() => props.name)
 .checkbox-input {
   width: var(--space-16px);
   height: var(--space-16px);
-  margin-top: 2px; /* Slight alignment adjustment with multi-line text */
+  accent-color: var(--clr-stroke-strong);
+  margin-top: 2px;
   cursor: pointer;
-  flex-shrink: 0; /* Prevent checkbox from shrinking with long text */
+  flex-shrink: 0;
 }
 
 .checkbox-text {

@@ -12,20 +12,10 @@
           <p class="question-text">{{ getQuestionText(question) }}</p>
         </div>
 
-        <div class="question-response">
-          <div class="scale-labels">
-            <span class="scale-label">Strongly Disagree</span>
-            <span class="scale-label">Disagree</span>
-            <span class="scale-label">Neutral</span>
-            <span class="scale-label">Agree</span>
-            <span class="scale-label">Strongly Agree</span>
-          </div>
-
-          <!-- Vue: v-model creates two-way binding automatically -->
-          <InputRadio :ref="el => radioRefs[question.id] = el" v-model="answers[question.id]"
-            :options="likertScaleOptions" :behavior-kind="question.behaviorKind" :name="`question-${question.id}`"
-            class="question-input" />
-        </div>
+        <!-- Vue: v-model creates two-way binding automatically -->
+        <InputRadio :ref="el => radioRefs[question.id] = el" v-model="answers[question.id]"
+          :options="likertScaleOptions" :behavior-kind="question.behaviorKind" :name="`question-${question.id}`"
+          class="question-input" />
       </div>
 
       <button type="submit" :disabled="!allQuestionsAnswered">
@@ -116,11 +106,11 @@ const getQuestionText = (question) => {
 const questionsToDisplay = computed(() => baseQuestions)
 
 const likertScaleOptions = [
-  { value: '1' },
-  { value: '2' },
-  { value: '3' },
-  { value: '4' },
-  { value: '5' }
+  { value: '1', text: 'Strongly Disagree' },
+  { value: '2', text: 'Disagree' },
+  { value: '3', text: 'Neutral' },
+  { value: '4', text: 'Agree' },
+  { value: '5', text: 'Strongly Agree' }
 ]
 
 // Form submission handler
@@ -183,26 +173,6 @@ const clearToxicInputsAndChangeText = () => {
 </script>
 
 <style>
-
-.question-response {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8px);
-  max-width: 100%;
-}
-
-.scale-labels {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-8px);
-}
-
-.scale-label {
-  flex: 1;
-  text-align: center;
-  font-size: var(--fontsize-s);
-}
-
 .question-number {
   font-size: var(--fontsize-h4);
 }

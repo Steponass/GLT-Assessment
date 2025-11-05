@@ -13,6 +13,10 @@ export function useInputNumber(props, emit) {
   const pirateTimeoutId = ref(null)
   const showPirateMessage = ref(false)
 
+  // Vue Concept: Shifty behavior state management
+  const shiftyIntervalId = ref(null)
+  const shiftyIterationCount = ref(0)
+
   // Vue Concept: Sync with parent component's v-model
   // Parse string input to number for parent component
   watch(() => props.modelValue, (newValue) => {
@@ -40,7 +44,7 @@ export function useInputNumber(props, emit) {
     // Update validation state immediately on input
     runValidation(numericValue, inputValue)
 
-    // Clear existing timeouts
+    // Clear existing timeouts and intervals
     if (timeoutId.value) {
       clearTimeout(timeoutId.value)
       timeoutId.value = null
@@ -48,6 +52,11 @@ export function useInputNumber(props, emit) {
     if (pirateTimeoutId.value) {
       clearTimeout(pirateTimeoutId.value)
       pirateTimeoutId.value = null
+    }
+    if (shiftyIntervalId.value) {
+      clearInterval(shiftyIntervalId.value)
+      shiftyIntervalId.value = null
+      shiftyIterationCount.value = 0
     }
 
     switch (props.behaviorKind) {
@@ -79,26 +88,41 @@ export function useInputNumber(props, emit) {
     }, 500)
   }
 
-  // Shifty behavior: Changes value by +1/-1 AND changes decimal formatting
+  // Shifty behavior: Continuously shifts value randomly between -9 and +199 for 10 iterations
   const handleShiftyBehavior = (numericValue, inputValue) => {
     // Update display immediately
     displayValue.value = inputValue
 
     timeoutId.value = setTimeout(() => {
       if (!validationError.value && numericValue !== null && !isNaN(numericValue)) {
-        // Vue Concept: Generate random modifications
-        // +1 or -1 randomly, and random decimal places (0-3)
-        const valueModification = Math.random() < 0.5 ? 1 : -1
-        const modifiedValue = numericValue + valueModification
+        // Reset iteration counter for new input
+        shiftyIterationCount.value = 0
 
-        const randomDecimalPlaces = Math.floor(Math.random() * 4) // 0-3 decimal places
-        const formattedValue = modifiedValue.toFixed(randomDecimalPlaces)
-        const finalValue = parseFloat(formattedValue)
+        // Start interval that runs 10 times
+        shiftyIntervalId.value = setInterval(() => {
+          shiftyIterationCount.value++
 
-        // Update both internal value and display formatting
-        internalValue.value = finalValue
-        displayValue.value = formattedValue
-        emit('update:modelValue', finalValue)
+          if (shiftyIterationCount.value <= 10) {
+            // Vue Concept: Generate random modifications between -9 and +199
+            const valueModification = Math.floor(Math.random() * 109) - 49 // Range: -49 to +99
+            const currentValue = internalValue.value !== null ? internalValue.value : numericValue
+            const modifiedValue = currentValue + valueModification
+
+            const randomDecimalPlaces = Math.floor(Math.random() * 4) // 0-3 decimal places
+            const formattedValue = modifiedValue.toFixed(randomDecimalPlaces)
+            const finalValue = parseFloat(formattedValue)
+
+            // Update both internal value and display formatting
+            internalValue.value = finalValue
+            displayValue.value = formattedValue
+            emit('update:modelValue', finalValue)
+          } else {
+            // Stop after 10 iterations
+            clearInterval(shiftyIntervalId.value)
+            shiftyIntervalId.value = null
+            shiftyIterationCount.value = 0
+          }
+        }, 200)
       } else {
         // Handle invalid input
         internalValue.value = numericValue
@@ -202,7 +226,7 @@ export function useInputNumber(props, emit) {
     return showPirateMessage.value
   }
 
-  // Vue Concept: Return reactive values and functions for component use
+  // Vue: Return reactive values and functions for component use
   return {
     handleNumberInput,
     getCurrentDisplayValue,

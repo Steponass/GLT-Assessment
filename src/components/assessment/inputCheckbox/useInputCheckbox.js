@@ -4,7 +4,7 @@ export function useInputCheckbox(props, emit) {
   // Vue: Array-based selectedValues for multiple selections
   // Unlike InputRadio's single selectedValue, checkboxes need array state
   const selectedValues = ref([...props.modelValue])
-  const hasGroupInteractionOccurred = ref(false)
+  const checkInteractionCount = ref(0)
   const timeoutIds = ref(new Map()) // Multiple simultaneous timeouts possible
 
   // Vue: Map-based state for efficient label management
@@ -70,30 +70,30 @@ export function useInputCheckbox(props, emit) {
     timeoutIds.value.set(value, timeoutId)
   }
 
-  // Shifty behavior: First check in group gets unchecked after 1s, then normal behavior
+  // Shifty behavior: First 2 checks get unchecked after 1s, then normal behavior
   const handleShiftyBehavior = (value, shouldBeChecked) => {
-    if (!hasGroupInteractionOccurred.value && shouldBeChecked) {
-      // First time checking any box in the group - it will get unchecked after 1s
+    if (checkInteractionCount.value < 2 && shouldBeChecked) {
+      // First 2 times checking any box in the group - it will get unchecked after 1s
       updateSelectedValues(value, true) // Show checked immediately
-      hasGroupInteractionOccurred.value = true
+      checkInteractionCount.value++
 
       const timeoutId = setTimeout(() => {
         updateSelectedValues(value, false) // Uncheck after 1s
         timeoutIds.value.delete(value)
-      }, 1000)
+      }, 800)
       timeoutIds.value.set(value, timeoutId)
     } else {
-      // Normal behavior - either not first interaction, or it's an uncheck, or group already interacted with
+      // Normal behavior after 2 checks, or it's an uncheck
       updateSelectedValues(value, shouldBeChecked)
     }
   }
 
-  // Toxic behavior: First check triggers permanent label swap, then normal functionality
+  // Toxic behavior: First 2 checks trigger permanent label swaps, then normal functionality
   const handleToxicBehavior = (value, shouldBeChecked) => {
-    if (!hasGroupInteractionOccurred.value && shouldBeChecked) {
-      // First time checking any box in the group - swap labels permanently
+    if (checkInteractionCount.value < 2 && shouldBeChecked) {
+      // First 2 times checking any box in the group - swap labels permanently
       swapLabelsWithRandomOption(value)
-      hasGroupInteractionOccurred.value = true
+      checkInteractionCount.value++
     }
 
     // Selection functionality works normally

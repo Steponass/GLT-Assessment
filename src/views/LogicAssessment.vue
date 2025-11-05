@@ -12,10 +12,9 @@
           <p class="question-text">
             Meeting productivity sequence: 100%, 73%, 46%, 19%, ?
           </p>
-          <span class="question-hint">(Enter the next number as percentage, e.g., 25)</span>
         </div>
 
-        <InputNumber v-model="answers.q1" :behavior-kind="getQuestionBehavior('q1')" placeholder="Enter percentage"
+        <InputNumber v-model="answers.q1" :behavior-kind="getQuestionBehavior('q1')" placeholder=""
           class="question-input" />
       </div>
 
@@ -88,7 +87,7 @@ const router = useRouter()
 const assessmentStore = useAssessmentStore()
 
 const answers = reactive({
-  q1: '',
+  q1: null,
   q2: [],
   q3: '',
   q4: '',
@@ -107,7 +106,7 @@ const questionBehaviors = {
 // Vue: Computed property for form validation
 const allQuestionsAnswered = computed(() => {
   return (
-    answers.q1 !== '' &&
+    answers.q1 !== null && answers.q1 !== undefined && !isNaN(answers.q1) &&
     Array.isArray(answers.q2) && answers.q2.length > 0 &&
     answers.q3 !== '' &&
     answers.q4 !== '' &&
@@ -142,7 +141,8 @@ const paradoxAutocompleteOptions = [
   "uncooperative",
   "paranoid",
   "overreacting",
-  "hostile"
+  "hostile",
+  "recalcitrant"
 ]
 
 // Question 5: Analogy completion options

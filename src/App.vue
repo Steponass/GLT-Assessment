@@ -90,7 +90,9 @@ main {
 }
 
 .assessment-description {
-  margin-bottom: var(--space-8-12px);
+  padding-inline: var(--space-8px);
+  margin-bottom: var(--space-12px);
+  text-align: center;
 }
 
 .questions-container {

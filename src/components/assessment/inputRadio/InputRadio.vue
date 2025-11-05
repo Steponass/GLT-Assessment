@@ -78,19 +78,24 @@ const inputName = computed(() => props.name)
 
 .radio-label {
   display: flex;
+  flex-direction: column-reverse;
 margin-block-start: var(--space-8px); 
- gap: var(--space-8px);
+ gap: var(--space-12px);
   cursor: pointer;
+  align-items: center;
+  text-align: center;
 }
 
 .radio-input {
   width: var(--space-12-16px);
   height: var(--space-12-16px);
+  accent-color: var(--clr-stroke-strong);
   cursor: pointer;
 }
 
 .radio-text {
   user-select: none;
+  font-size: var(--fontsize-s);
 }
 
 </style>
