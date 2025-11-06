@@ -38,7 +38,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  animation: colorShift 20s infinite;
+  animation: colorShift 25s infinite;
 }
 
 .header-logo img {
@@ -68,8 +68,13 @@ export default {
     background-color: hsl(15, 10%, 90%);
   }
 
-  100% {
+  90% {
     background-color: hsl(20, 9%, 94%);
   }
+
+  100% {
+    background-color: hsl(0, 10%, 92%);
+  }
+
 }
 </style>
