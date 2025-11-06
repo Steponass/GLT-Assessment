@@ -80,8 +80,8 @@ const baseQuestions = [
     options: [
       { value: 'never', text: 'Never' },
       { value: '47days', text: '47 days' },
-      { value: 'already', text: 'She already is the manager' },
-      { value: 'math-cannot', text: 'Mathematics cannot solve Karen' }
+      { value: 'already', text: 'She is the manager' },
+      { value: 'math-cannot', text: 'Math cannot solve Karen' }
     ],
     behaviorKind: 'shifty'
   },
@@ -90,7 +90,7 @@ const baseQuestions = [
     type: 'radio',
     text: 'A train leaves Chicago at 3 PM traveling 60 mph. Another train leaves New York at 4 PM traveling 75 mph. When will you admit you don\'t care about these trains?',
     options: [
-      { value: 'immediately', text: 'Immediately' },
+      { value: 'they-matter', text: 'Never, choo-choo!' },
       { value: 'after-therapy', text: 'After therapy' },
       { value: 'trains-sentience', text: 'When the trains achieve sentience' },
       { value: 'i-am-train', text: 'I am the train' }

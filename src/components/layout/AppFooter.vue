@@ -19,7 +19,7 @@ export default {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    background-color: var(--clr-secondary);
+    animation: colorShift 20s infinite;
   }
 
   a {
@@ -29,5 +29,19 @@ export default {
       text-decoration: none;
     }
   }
+
+  @keyframes colorShift {
+  0% {
+    background-color: hsl(0, 20%, 94%);
+  }
+
+  50% {
+    background-color: hsl(0, 2%, 92%);
+  }
+
+  100% {
+    background-color: hsl(0, 17%, 95%);
+  }
+}
 
 </style>

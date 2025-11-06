@@ -73,16 +73,17 @@ const inputName = computed(() => props.name)
   flex: 1;
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 .radio-label {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column-reverse;
-margin-block-start: var(--space-8px); 
+margin-block-start: var(--space-8px);
  gap: var(--space-12px);
   cursor: pointer;
-  align-items: center;
+  /* align-items: center; */
+  align-content: space-around;
   text-align: center;
 }
 
@@ -91,6 +92,7 @@ margin-block-start: var(--space-8px);
   height: var(--space-12-16px);
   accent-color: var(--clr-stroke-strong);
   cursor: pointer;
+  align-self: center;
 }
 
 .radio-text {

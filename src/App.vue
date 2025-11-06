@@ -7,7 +7,7 @@ import AppFooter from '@/components/layout/AppFooter.vue'
 import { useAssessmentStore } from '@/stores/assessmentStore'
 import ProgressBar from '@/components/layout/ProgressBar.vue';
 
-console.log("So Danske Bank divested from Bank Hapoalim in 2024, then invested again in 2024? Sneaky mfs 😂")
+console.log("So Danske Bank divested from Bank Hapoalim in 2014, then invested again in 2024? Sneaky mfs 😂")
 
 export default {
   name: 'App',
@@ -108,6 +108,11 @@ main {
   gap: var(--space-12px);
 }
 
+.question-input {
+  margin-inline-start: var(--space-24-32px);
+}
+
+
 .question-number {
   font-size: var(--fontsize-h4);
   font-weight: bold;
@@ -129,7 +134,7 @@ main {
 }
 
 button {
-  width: min(320px, 80%);
+  width: min(320px, 82%);
   margin-inline: auto;
   border: none;
   cursor: pointer;
@@ -143,6 +148,7 @@ button {
   @media (hover: hover) {
     &:hover {
       background-color: var(--clr-stroke-strong);
+      box-shadow: var(--shadow-elevation-2);
     }
   }
 
