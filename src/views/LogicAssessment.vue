@@ -147,10 +147,10 @@ const paradoxAutocompleteOptions = [
 
 // Question 5: Analogy completion options
 const analogyOptions = [
-  { value: 'collaboration', text: 'Collaboration' },
+  { value: 'trauma_bonding', text: 'Stockholm syndrome' },
+  { value: 'help', text: 'A cry for help' },
   { value: 'awkward_bonding', text: 'Awkward bonding' },
-  { value: 'trust_building', text: 'Trust building' },
-  { value: 'skill_development', text: 'Skill development' }
+  { value: 'group_therapy', text: 'Forced group therapy' }
 ]
 
 const handleSubmit = () => {

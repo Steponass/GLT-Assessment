@@ -2,7 +2,7 @@
   <div class="assessment">
     <h1 class="assessment-title">Data Analysis Assessment</h1>
     <p class="assessment-description">
-      Lick that data clean off the table.
+      Lick that data clean off that table.
     </p>
 
     <form class="questions-container" @submit.prevent="handleSubmit">
@@ -120,12 +120,12 @@ const reliabilityDataPoints = [
   'Your screen time report',
   'Calorie counts on restaurant menus',
   'Dating app user photos',
+  'Your boss saying “We\'re like a family here”',
   'Social media engagement metrics',
   "Your step counter when you're driving",
   'Restaurant reviews that are exactly 5 stars or 1 star',
-  'Your boss saying "We\'re like a family here"',
   'Your friend who "doesn\'t like drama"',
-  'Terms and Conditions everyone "read and agreed to"',
+  'Terms and Conditions everyone “read and agreed to”',
 ]
 
 const handleSubmit = () => {

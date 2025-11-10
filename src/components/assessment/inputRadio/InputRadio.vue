@@ -73,6 +73,7 @@ const inputName = computed(() => props.name)
   flex: 1;
   display: flex;
   justify-content: center;
+  padding-inline: 2px;
 }
 
 .radio-label {

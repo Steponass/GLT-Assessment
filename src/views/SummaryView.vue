@@ -26,7 +26,7 @@
         </ul>
 
         <h5>Recommended Role:</h5>
-        <p>{{ userPersonalityProfile.recommendedRole }}</p>
+        <p class="summary-list">{{ userPersonalityProfile.recommendedRole }}</p>
 
 
         <div class="in-touch-shortly">
@@ -104,7 +104,7 @@ export default {
 
 .summary-list {
   list-style: inside;
-  margin-block: var(--space-8-12px) var(--space-16-24px);
+  margin-block: var(--space-8-12px) var(--space-24px);
 }
 
 hr {

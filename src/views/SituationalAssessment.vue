@@ -120,13 +120,13 @@ const copingMechanismsItems = [
   'Stress-eating entire sleeves of crackers',
   'Reorganizing your apps alphabetically',
   'Watching the same comfort show for the 47th time',
-  'Taking "personality quizzes" to understand yourself',
-  'Googling "Is it normal to..."'
+  'Taking “personality quizzes” to understand yourself',
+  'Googling “Is it normal to...”'
 ]
 
 const overtimeOptions = [
   { value: 'reply_with_who_dis', text: 'Reply with "new phone who dis"' },
-  { value: 'agree_then_not_showup', text: 'Agree enthusiastically then not show up' },
+  { value: 'agree_then_not_showup', text: 'Agree eagerly then not show up' },
   { value: 'respond_in_haikus', text: 'Respond only in haikus' },
   { value: 'forward_to_their_mngr', text: 'Forward the request to their manager' }
 ]

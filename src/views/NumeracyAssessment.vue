@@ -92,7 +92,7 @@ const baseQuestions = [
     options: [
       { value: 'they-matter', text: 'Never, choo-choo!' },
       { value: 'after-therapy', text: 'After therapy' },
-      { value: 'trains-sentience', text: 'When the trains achieve sentience' },
+      { value: 'trains-sentience', text: 'When trains achieve sentience' },
       { value: 'i-am-train', text: 'I am the train' }
     ],
     behaviorKind: 'regular'
@@ -117,7 +117,7 @@ const baseQuestions = [
   {
     id: 'q4',
     type: 'number',
-    text: 'If "synergy" gets mentioned 14 times per meeting and you attend 6 meetings weekly, how many times monthly do you die inside?',
+    text: 'If “synergy” gets mentioned 14 times per meeting and you attend 6 meetings weekly, how many times monthly do you die inside?',
     behaviorKind: 'shifty'
   },
   {
