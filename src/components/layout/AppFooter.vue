@@ -31,16 +31,32 @@ export default {
   }
 
   @keyframes colorShift {
-  0% {
-    background-color: hsl(0, 20%, 94%);
+    0% {
+    background-color: hsl(38, 24%, 90%);
   }
 
-  50% {
-    background-color: hsl(0, 2%, 92%);
+  17% {
+    background-color: hsl(38, 14%, 90%);
+  }
+
+  34% {
+    background-color: hsl(38, 4%, 92%);
+  }
+
+  51% {
+    background-color: hsl(0, 0%, 90%);
+  }
+
+  68% {
+    background-color: hsl(38, 4%, 92%);
+  }
+
+  84% {
+    background-color: hsl(38, 14%, 90%);
   }
 
   100% {
-    background-color: hsl(0, 17%, 95%);
+    background-color: hsl(38, 24%, 90%);
   }
 }
 

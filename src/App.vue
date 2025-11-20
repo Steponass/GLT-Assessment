@@ -66,7 +66,7 @@ export default {
 
 #app {
   min-height: 100vh;
-  width: 100vw;
+  /* width: 100vw; */
   background-color: var(--clr-background);
   display: flex;
   flex-direction: column;

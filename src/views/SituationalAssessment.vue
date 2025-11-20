@@ -1,8 +1,7 @@
 <template>
   <div class="assessment">
     <h1 class="assessment-title">Behavioral Assessment</h1>
-    <p class="assessment-description">Answer the questions to align with your actual self. There are no right or wrong
-      answers.
+    <p class="assessment-description">Answer the questions to. There <strong>are</strong> right or wrong answers.
     </p>
 
     <form class="questions-container" @submit.prevent="handleSubmit">

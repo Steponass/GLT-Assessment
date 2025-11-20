@@ -56,8 +56,6 @@ router.beforeEach((to, from, next) => {
     return
   }
 
-  // TODO: Add logic to check if user can access this route based on progress
-  // This will use the assessmentStore to verify completion status
   next()
 })
 
