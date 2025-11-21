@@ -1,6 +1,6 @@
 <template>
   <div class="splash-container">
-    <img class="glt_logo" src="/lamp_13806789.png" />
+    <img class="glt_logo" src="/lamp-svgrepo-com-1024px.png" />
     <div class="splash-title">
       <h1>GLT Assessment</h1>
       <h6>
@@ -40,12 +40,12 @@ export default {
 
 .glt_logo {
   width: 200px;
-  transition: transform 10s ease-in-out, opacity 0.3s ease;
-  transform: perspective(300px) rotateX(0deg) translateZ(-100px) scale(1);
+  transition: transform 10s cubic-bezier(.92,-0.2,.1,1.15), opacity 0.3s ease;
+  transform: perspective(300px) scale(1) translateY(0) rotateX(10deg) rotateZ(3deg);
   transform-style: preserve-3d;
 
   @starting-style {
-    transform: perspective(200px) scale(0.01) rotateX(90deg);
+    transform: perspective(1px) translateY(200px) scale(0.01) rotateX(-40deg);
   }
 }
 

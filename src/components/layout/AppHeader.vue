@@ -44,11 +44,31 @@ export default {
 .header-logo img {
   max-height: 40px;
   margin-inline-end: var(--space-12-16px);
+  animation: skewingShit 20s infinite;
 }
 
 .completed_today {
   text-align: end;
   line-height: 1.1;
+}
+
+@keyframes skewingShit {
+  0% {
+    transform: skew(0);
+  }
+  25% {
+    transform: skew(3deg, 3deg);
+  }
+  50% {
+    transform: skew(0);
+  }
+  75% {
+    transform: skew(-3deg, -3deg);
+  }
+  100% {
+    transform: skew(0);
+  }
+
 }
 
 @keyframes colorShift {

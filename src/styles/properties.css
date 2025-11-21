@@ -31,14 +31,14 @@
 
 /* COLORS */
 :root {
---clr-primary:     hsl(187,  99%, 16%);
---clr-secondary:   hsl(38,   24%, 80%);
+--clr-primary:     #004852;
+--clr-secondary:   #d8cfc0;
 --clr-text:        hsl(0,     0%,  0%);
---clr-text-weak:   hsl(0,     0%, 25%);
---clr-background:  hsl(187,  90%, 99%);
---clr-stroke-strong:hsl(187, 39%, 36%);
+--clr-text-weak:   #404040;
+--clr-background:  #fafeff;
+--clr-stroke-strong:#387780;
 --clr-stroke-weak: hsl(187,  39%, 76%);
---clr-error:         hsl(0, 68%, 51%);
+--clr-error:         #d72d2d;
 }
 
 /* SHADOWS */
