@@ -142,6 +142,7 @@ button {
   color: white;
   padding: var(--space-12px) var(--space-16px);
   transition: all 0.2s ease;
+  animation: skewingButton 28s infinite;
   margin-block-end: var(--space-32px);
   font-weight: 500;
 
@@ -159,6 +160,28 @@ button {
   &:disabled {
     background-color: var(--clr-stroke-weak);
   }
+}
+
+@keyframes skewingButton {
+  0% {
+    transform: skew(0);
+  }
+  25% {
+    transform: skew(0.5deg, 0.5deg);
+  }
+  50% {
+    transform: skew(0);
+  }
+  75% {
+    transform: skew(-0.5deg, -0.5deg);
+  }
+  100% {
+    transform: skew(0);
+  }
+}
+
+input {
+  caret-color: var(--clr-primary);
 }
 
 .stack>*+* {

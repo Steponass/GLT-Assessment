@@ -4,7 +4,13 @@ export function useInputNumber(props, emit) {
   // Vue Concept: Number input requires careful type handling
   // Store both internal value and display value for different behaviors
   const internalValue = ref(props.modelValue)
-  const displayValue = ref(props.modelValue?.toString() || '')
+  // Don't initialize displayValue with "NaN" if modelValue is NaN
+  const getSafeDisplayValue = (value) => {
+    if (value === null || value === undefined) return ''
+    if (typeof value === 'number' && Number.isNaN(value)) return ''
+    return value.toString()
+  }
+  const displayValue = ref(getSafeDisplayValue(props.modelValue))
   const timeoutId = ref(null)
   const validationError = ref('')
 
@@ -20,15 +26,21 @@ export function useInputNumber(props, emit) {
   // Vue Concept: Sync with parent component's v-model
   // Parse string input to number for parent component
   watch(() => props.modelValue, (newValue) => {
+    // Don't sync if the value is NaN (invalid state) - keep current display value
+    if (typeof newValue === 'number' && Number.isNaN(newValue)) {
+      // Don't update displayValue - let user continue typing
+      return
+    }
+
     if (newValue === null || newValue === undefined) {
       internalValue.value = newValue
-      displayValue.value = newValue?.toString() || ''
+      displayValue.value = ''
       isPirateMode.value = false
       showPirateMessage.value = false
       validationError.value = ''
     } else {
       internalValue.value = newValue
-      displayValue.value = newValue?.toString() || ''
+      displayValue.value = getSafeDisplayValue(newValue)
       validationError.value = ''
     }
   }, { immediate: true })
@@ -124,9 +136,8 @@ export function useInputNumber(props, emit) {
           }
         }, 200)
       } else {
-        // Handle invalid input
-        internalValue.value = numericValue
-        emit('update:modelValue', numericValue)
+        // Handle invalid input - don't emit NaN, keep previous valid value
+        // Don't update internalValue or emit for invalid input
       }
     }, 200)
   }
@@ -150,9 +161,8 @@ export function useInputNumber(props, emit) {
         activatePirateMode()
       }, 1200) // 1.2 seconds to let user see what they typed
     } else {
-      // Handle non-numeric input normally
-      internalValue.value = numericValue
-      emit('update:modelValue', numericValue)
+      // Handle non-numeric input - don't emit NaN, keep previous valid value
+      // Don't update internalValue or emit for invalid input
     }
   }
 

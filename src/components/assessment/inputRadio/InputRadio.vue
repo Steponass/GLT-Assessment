@@ -86,6 +86,25 @@ margin-block-start: var(--space-8px);
   /* align-items: center; */
   align-content: space-around;
   text-align: center;
+  animation: letterShit 15s infinite;
+}
+
+@keyframes letterShit {
+  0% {
+    letter-spacing: 0em;
+  }
+  25% {
+    letter-spacing: -0.01em;
+  }
+  50% {
+    letter-spacing: -0.03em;
+  }
+  75% {
+    letter-spacing: -0.01em;
+  }
+  100% {
+    letter-spacing: 0em;
+  }
 }
 
 .radio-input {

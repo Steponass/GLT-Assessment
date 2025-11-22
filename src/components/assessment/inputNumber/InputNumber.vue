@@ -87,12 +87,31 @@ const inputName = computed(() => props.name)
   border-radius: 4px;
   font-size: var(--fontsize-body);
   transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.number-input:focus {
+  animation: perspectiveShit 15s infinite;
+  transform-style: preserve-3d;
+  &:focus {
   outline: none;
   border-color: var(--clr-primary);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--clr-primary) 20%, transparent);
+  }
+}
+
+@keyframes perspectiveShit {
+  0% {
+    transform: perspective(300px) rotateX(0deg);
+  }
+  25% {
+    transform:  perspective(100px) rotateX(3deg);
+  }
+  50% {
+    transform:  perspective(200px) rotateX(6deg);
+  }
+  75% {
+    transform:  perspective(100px) rotateX(3deg);
+  }
+  100% {
+    transform:  perspective(300px) rotateX(0deg);
+  }
 }
 
 .number-input.has-error {

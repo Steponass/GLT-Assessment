@@ -97,19 +97,35 @@ const handleKeyDown = (keyboardEvent) => {
   cursor: grab;
   user-select: none;
   transition: all 0.2s ease;
-
+  animation: blurryShit 15s infinite;
   /* Button-like appearance with extra padding as requested */
   box-shadow: var(--shadow-elevation-1);
-}
-
-.drag-item:hover {
+  &:hover {
   border-color: var(--clr-stroke-strong);
   box-shadow: var(--shadow-elevation-2);
-}
-
-.drag-item:focus {
+  }
+  &:focus {
   outline: 2px solid var(--clr-primary);
   outline-offset: 2px;
+  }
+}
+
+@keyframes blurryShit {
+  0% {
+    filter: blur(0px);
+  }
+  25% {
+    filter: blur(0.5px);
+  }
+  50% {
+    filter: blur(1px);
+  }
+  75% {
+    filter: blur(0.5px);
+  }
+  100% {
+    filter: blur(0px);
+  }
 }
 
 .drag-item.draggable:active {

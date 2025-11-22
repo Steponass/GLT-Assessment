@@ -26,7 +26,9 @@ export default {
 
 <style scoped>
 .splash-container {
-  position: absolute;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -36,11 +38,12 @@ export default {
   text-align: center;
   gap: var(--space-16px);
   background-color: var(--clr-background);
+  z-index: 1;
 }
 
 .glt_logo {
   width: 200px;
-  transition: transform 10s cubic-bezier(.92,-0.2,.1,1.15), opacity 0.3s ease;
+  transition: transform 10s cubic-bezier(.92, -0.2, .1, 1.15), opacity 0.3s ease;
   transform: perspective(300px) scale(1) translateY(0) rotateX(10deg) rotateZ(3deg);
   transform-style: preserve-3d;
 

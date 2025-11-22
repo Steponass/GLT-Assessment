@@ -68,7 +68,6 @@ export default {
   100% {
     transform: skew(0);
   }
-
 }
 
 @keyframes colorShift {

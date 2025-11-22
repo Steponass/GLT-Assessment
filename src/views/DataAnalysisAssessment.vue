@@ -59,7 +59,7 @@
       </div>
 
       <button type="submit" class="submit-button" :disabled="!allQuestionsAnswered">
-        Continue to Behavioral Assessment
+        Submit
       </button>
     </form>
   </div>
