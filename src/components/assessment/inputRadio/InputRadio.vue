@@ -97,7 +97,7 @@ margin-block-start: var(--space-8px);
     letter-spacing: -0.01em;
   }
   50% {
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
   }
   75% {
     letter-spacing: -0.01em;

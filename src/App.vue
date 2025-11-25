@@ -80,18 +80,18 @@ main {
 .assessment {
   width: min(1024px, 95%);
   margin: 0 auto;
-  padding-block: var(--space-12-16px);
+  padding-block: var(--space-24px);
 }
 
 .assessment-title {
   text-align: center;
-  margin-bottom: var(--space-16-24px);
+  margin-bottom: var(--space-12-16px);
   font-size: var(--fontsize-h2);
 }
 
 .assessment-description {
   padding-inline: var(--space-8px);
-  margin-bottom: var(--space-12px);
+  margin-bottom: var(--space-24px);
   text-align: center;
 }
 

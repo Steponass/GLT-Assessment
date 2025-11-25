@@ -43,11 +43,14 @@ export default {
 
 .glt_logo {
   width: 200px;
-  transition: transform 10s cubic-bezier(.92, -0.2, .1, 1.15), opacity 0.3s ease;
+  transition: transform 10s cubic-bezier(.92, -0.2, .1, 1), opacity 0.3s ease;
   transform: perspective(300px) scale(1) translateY(0) rotateX(10deg) rotateZ(3deg);
   transform-style: preserve-3d;
+  perspective-origin: 20% bottom;
+  z-index: -1;
 
   @starting-style {
+    perspective-origin: 20% bottom;
     transform: perspective(1px) translateY(200px) scale(0.01) rotateX(-40deg);
   }
 }

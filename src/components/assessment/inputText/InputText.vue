@@ -94,7 +94,7 @@ defineExpose({
 .input-text-container {
   position: relative;
   display: inline-block;
-  width: 100%;
+  width: 95%;
 }
 
 .text-input {

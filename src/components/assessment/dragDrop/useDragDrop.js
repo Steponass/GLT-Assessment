@@ -12,6 +12,8 @@ export function useDragDrop(props, emit) {
   const categoryPlacementCounts = reactive({})
   const totalDropCount = ref(0)
   const shiftyTimeoutId = ref(null)
+  const getRandomInterval = () => (Math.random() < 0.5 ? 2 : 3)
+  const dropsUntilShifty = ref(getRandomInterval())
 
   // Initialize placement counts for each category
   props.categories.forEach(category => {
@@ -110,8 +112,10 @@ export function useDragDrop(props, emit) {
     // Increment global drop count
     totalDropCount.value++
 
-    // On every 3rd drop globally, relocate the item to a different random category
-    if (totalDropCount.value % 3 !== 0) return
+    // Decrement randomized counter (fires every 2nd or 3rd drop, chosen after each trigger)
+    dropsUntilShifty.value--
+    if (dropsUntilShifty.value > 0) return
+    dropsUntilShifty.value = getRandomInterval()
 
     // Find a different random category
     const otherCategories = props.categories.filter(cat => cat !== targetCategory)

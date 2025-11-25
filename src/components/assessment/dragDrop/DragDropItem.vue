@@ -97,8 +97,6 @@ const handleKeyDown = (keyboardEvent) => {
   cursor: grab;
   user-select: none;
   transition: all 0.2s ease;
-  animation: blurryShit 15s infinite;
-  /* Button-like appearance with extra padding as requested */
   box-shadow: var(--shadow-elevation-1);
   &:hover {
   border-color: var(--clr-stroke-strong);
@@ -110,18 +108,22 @@ const handleKeyDown = (keyboardEvent) => {
   }
 }
 
+.drag-item p {
+  animation: blurryShit 15s infinite;
+}
+
 @keyframes blurryShit {
   0% {
     filter: blur(0px);
   }
   25% {
-    filter: blur(0.5px);
+    filter: blur(0.4px);
   }
   50% {
-    filter: blur(1px);
+    filter: blur(0.8px);
   }
   75% {
-    filter: blur(0.5px);
+    filter: blur(0.4px);
   }
   100% {
     filter: blur(0px);

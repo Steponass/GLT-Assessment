@@ -146,7 +146,7 @@ const availableItems = computed(() => {
   padding: var(--space-16px);
   border: 2px solid var(--clr-stroke-weak);
   border-radius: var(--radius-8px);
-  background-color: var(--clr-secondary);
+  background-color: var(--clr-stroke-weak);
   transition: all 0.2s ease;
 }
 

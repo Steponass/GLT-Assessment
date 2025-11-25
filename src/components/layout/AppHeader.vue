@@ -1,8 +1,9 @@
 <template>
   <header class="app-header">
     <div class="header-logo">
-      <a rel="noopener noreferrer" href="https://en.wikipedia.org/wiki/Danske_Bank_money_laundering_scandal"><img src="/lamp_13806789.png" alt="GLT assessments logo"></a>
-  </div>
+      <a rel="noopener noreferrer" href="https://en.wikipedia.org/wiki/Danske_Bank_money_laundering_scandal"><img
+          src="/lamp_13806789.png" alt="GLT assessments logo"></a>
+    </div>
     <p class="completed_today"><strong>{{ formattedCount }}</strong> users have completed this test today</p>
   </header>
 
@@ -14,7 +15,8 @@ export default {
   name: 'AppHeader',
   data() {
     return {
-      usersCompletedToday: 0
+      usersCompletedToday: 0,
+      incrementTimer: null
     }
   },
   computed: {
@@ -22,10 +24,30 @@ export default {
       return this.usersCompletedToday.toLocaleString()
     }
   },
-  beforeMount() {
-    const min = 912
-    const max = 1835
-    this.usersCompletedToday = Math.floor(Math.random() * (max - min + 1)) + min
+  mounted() {
+    this.seedInitialCount()
+    this.startCountUpdates()
+  },
+  beforeUnmount() {
+    if (this.incrementTimer) {
+      clearInterval(this.incrementTimer)
+    }
+  },
+  methods: {
+    seedInitialCount() {
+      const min = 912
+      const max = 1835
+      this.usersCompletedToday = Math.floor(Math.random() * (max - min + 1)) + min
+    },
+    startCountUpdates() {
+      this.incrementTimer = setInterval(this.incrementCount, 10000)
+    },
+    incrementCount() {
+      const minIncrement = 3
+      const maxIncrement = 43
+      const increment = Math.floor(Math.random() * (maxIncrement - minIncrement + 1)) + minIncrement
+      this.usersCompletedToday += increment
+    }
   }
 }
 </script>
@@ -44,7 +66,7 @@ export default {
 .header-logo img {
   max-height: 40px;
   margin-inline-end: var(--space-12-16px);
-  animation: skewingShit 20s infinite;
+  animation: skewingShit 24s infinite;
 }
 
 .completed_today {
@@ -56,15 +78,19 @@ export default {
   0% {
     transform: skew(0);
   }
+
   25% {
     transform: skew(3deg, 3deg);
   }
+
   50% {
     transform: skew(0);
   }
+
   75% {
     transform: skew(-3deg, -3deg);
   }
+
   100% {
     transform: skew(0);
   }
