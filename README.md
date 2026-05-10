@@ -1,0 +1,3 @@
+This was my way with dealing with some semi-traumatizing Job Application experiences in '25…
+
+Also, a chance to get to know Vue.js which is wonderful.
